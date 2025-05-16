@@ -1,6 +1,5 @@
 # Paid Next.js Client SDK
-
-**Official Next.js SDK for Paid.ai**  
+ 
 Easily embed the Paid.ai Activity Log component in your Next.js app to display agent usage for specific accounts.
 
 ---
