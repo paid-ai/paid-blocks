@@ -1,10 +1,28 @@
 {
-  "name": "paid-nextjs-client",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@agentpaid/paid-nextjs-client",
+  "version": "0.1.0-test.6",
+  "description": "Official NextJS Component SDK for the Paid.ai APIs.",
+  "homepage": "https://github.com/AgentPaid/paid-nextjs-client#readme",
+  "bugs": {
+    "url": "https://github.com/AgentPaid/paid-nextjs-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgentPaid/paid-nextjs-client.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rm -rf dist && tsc && cp -r src/styles dist/styles && cp -r src/components dist/components && cp -r src/api dist/api && cp src/index.ts dist/index.js && cp src/index.ts dist/index.d.ts && find dist -name '*.tsx' -exec sh -c 'mv \"$1\" \"${1%.tsx}.js\"' _ {} \\;",
+    "prepublishOnly": "npm run build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -15,17 +33,17 @@
   },
   "devDependencies": {
     "@eslint/js": "^8.56.0",
-    "@tailwindcss/forms": "^0.5.7",
     "@types/node": "^20",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
-    "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "postcss": "^8.4.35",
-    "postcss-import": "^16.1.0",
-    "tailwindcss": "^3.4.1",
     "typescript": "~5.3.3"
+  },
+  "peerDependencies": {
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
