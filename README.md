@@ -55,7 +55,7 @@ PAID_API_KEY=your_paid_ai_api_key_here
 **Run this command to generate the required directory and file:**
 
 ```bash
-mkdir -p src/app/api/usage/[accountExternalId] && touch src/app/api/usage/[accountExternalId]/route.ts
+mkdir -p "src/app/api/usage/[accountExternalId]" && touch "src/app/api/usage/[accountExternalId]/route.ts"
 ```
 
 **Then, add the following code to `src/app/api/usage/[accountExternalId]/route.ts`:**
