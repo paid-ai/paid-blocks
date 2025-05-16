@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Paid Next.js Client SDK
 
-## Getting Started
+**Official Next.js SDK for Paid.ai**  
+Easily embed the Paid.ai Activity Log component in your Next.js app to display agent usage for specific accounts.
 
-First, run the development server:
+---
+
+## Features
+
+- Plug-and-play React component for displaying agent activity logs.
+- Designed for Next.js 13+ (App Router).
+- Fetches usage data for a given account using your API key.
+- Fully customizable and responsive.
+
+---
+
+## Installation
 
 ```bash
-npm run dev
+npm install @agentpaid/paid-nextjs-client
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn add @agentpaid/paid-nextjs-client
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Import the component:**
 
-## Learn More
+```tsx
+import { PaidActivityLog } from '@agentpaid/paid-nextjs-client';
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Add it to your page or component:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```tsx
+<PaidActivityLog accountExternalId="your_external_account_id" />
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `accountExternalId` (string, required): The customer external ID of the account whose activity you want to display.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Route Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To enable the PaidActivityLog component, you must create an API route in your Next.js app that proxies requests to Paid.ai using your API key.
+
+**You must also create a `.env.local` file in your project root and add your Paid.ai API key:**
+
+```env
+PAID_API_KEY=your_paid_ai_api_key_here
+```
+
+**Run this command to generate the required directory and file:**
+
+```bash
+mkdir -p src/app/api/usage/[accountExternalId] && touch src/app/api/usage/[accountExternalId]/route.ts
+```
+
+**Then, add the following code to `src/app/api/usage/[accountExternalId]/route.ts`:**
+
+```ts
+import { handlePaidUsage } from '@agentpaid/paid-nextjs-client';
+
+export const GET = handlePaidUsage(process.env.PAID_API_KEY!);
+```
+
+This will securely proxy usage requests to Paid.ai using your API key from environment variables.
+
+---
+
+## Example
+
+```tsx
+import { PaidActivityLog } from '@agentpaid/paid-nextjs-client';
+
+export default function Page() {
+  return (
+    <div>
+      <PaidActivityLog accountExternalId="customer_123" />
+    </div>
+  );
+}
+```
+
