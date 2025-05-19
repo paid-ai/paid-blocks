@@ -1,6 +1,6 @@
 export function handlePaidUsage(apiKey: string) {
   return async function GET(
-    request: Request,
+    _: Request,
     { params }: { params: { accountExternalId: string } }
   ) {
     try {
@@ -16,9 +16,6 @@ export function handlePaidUsage(apiKey: string) {
           }
         );
       }
-
-      console.log('apiKey', apiKey);
-      console.log('accountExternalId', accountExternalId);
 
       const response = await fetch(
         `${apiBase}/api/organizations/org/customer/external/${accountExternalId}`,

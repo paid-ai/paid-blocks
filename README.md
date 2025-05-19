@@ -74,10 +74,21 @@ This will securely proxy usage requests to Paid.ai using your API key from envir
 ```tsx
 import { PaidActivityLog } from '@agentpaid/paid-nextjs-client';
 
-export default function Page() {
+export default function AgentDashboard() {
   return (
-    <div>
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <h1>Agent Dashboard</h1>
+
+      <section style={{ marginBottom: '2rem' }}>
+        <p><strong>Welcome back!</strong></p>
+        <p>Here’s a breakdown of recent activity for account <code>customer_123</code>.</p>
+      </section>
+
       <PaidActivityLog accountExternalId="customer_123" />
+
+      <section style={{ marginTop: '2rem' }}>
+        <p>Need help? Visit our <a href="/support">support center</a>.</p>
+      </section>
     </div>
   );
 }
