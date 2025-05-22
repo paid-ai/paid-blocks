@@ -1,6 +1,6 @@
 {
   "name": "@agentpaid/paid-nextjs-client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Official NextJS Component SDK for the Paid.ai APIs.",
   "homepage": "https://github.com/AgentPaid/paid-nextjs-client#readme",
   "bugs": {
