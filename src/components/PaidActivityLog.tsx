@@ -57,7 +57,6 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ accountExterna
     const [usageSummaries, setUsageSummaries] = useState<UsageSummary[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [showAll, setShowAll] = useState(false);
 
     // Convert paidStyle entries into CSS custom properties
     const cssVariables: React.CSSProperties = Object.entries(paidStyle).reduce((vars, [key, value]) => {
@@ -123,8 +122,7 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ accountExterna
         fetchUsageData();
     }, [accountExternalId]);
 
-    const displayedSummaries = showAll ? usageSummaries : usageSummaries.slice(0, 4);
-    const hasMoreSummaries = usageSummaries.length > 4;
+    const displayedSummaries = usageSummaries;
 
     if (loading) {
         return <div>Loading usage data...</div>;
@@ -139,14 +137,6 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ accountExterna
             <div className="paid-activity-log-table-wrapper" style={{ position: 'static', width: '100%', height: 'auto', left: undefined, top: undefined, boxShadow: undefined, cursor: undefined }}>
                 <div className="paid-activity-log-header">
                     <h3 className="paid-activity-log-title">Paid.ai Activity Log</h3>
-                    {hasMoreSummaries && (
-                        <button 
-                            onClick={() => setShowAll(!showAll)}
-                            className="paid-activity-log-toggle-btn"
-                        >
-                            {showAll ? 'Show less' : 'Show all usage'}
-                        </button>
-                    )}
                 </div>
                 <div style={{ background: '#fff', overflow: 'auto' }}>
                     <table className="paid-activity-log-table">
