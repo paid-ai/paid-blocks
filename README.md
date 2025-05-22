@@ -94,3 +94,60 @@ export default function AgentDashboard() {
 }
 ```
 
+---
+
+## Styling & Customization
+
+The `PaidActivityLog` component is fully customizable through the `paidStyle` prop. You can override the visual design of the component, such as fonts, colors, borders, and layout, by passing an object with our predefined styling variables.
+
+These custom CSS properties map directly to visual elements inside the component and allow full control over typography, layout, and colors without modifying any stylesheets.
+
+## Example
+
+```html
+<PaidActivityLog 
+  accountExternalId="customer_123" 
+  paidStyle={{
+    paidTitleColor: '#ff0000',
+    paidTitleFontWeight: 'bold',
+    paidFontFamily: 'Comic Sans MS, Comic Sans, sans-serif',
+    paidWrapperBorder: 'none',
+    paidHeaderBorderBottom: 'none',
+    paidThBorderBottom: 'none',
+    paidTdBorderBottom: 'none',
+    paidTdColor: '#00ff00',
+    paidTdBg: '#0000ff',
+    paidRowHoverBg: '#000000',
+  }}
+/>
+```
+
+## Available Style Variables
+
+| Variable Name | CSS Custom Property | Description |
+| --- | --- | --- |
+| `paidFontFamily` | `--paid-font-family` | Global font for all content |
+| `paidTitleFontSize` | `--paid-title-font-size` | Title font size |
+| `paidTitleFontWeight` | `--paid-title-font-weight` | Title font weight |
+| `paidTitleColor` | `--paid-title-color` | Title color |
+| `paidToggleFontSize` | `--paid-toggle-font-size` | Toggle font size |
+| `paidToggleFontWeight` | `--paid-toggle-font-weight` | Toggle font weight |
+| `paidToggleColor` | `--paid-toggle-color` | Toggle color |
+| `paidThFontSize` | `--paid-th-font-size` | Table header font size |
+| `paidThFontWeight` | `--paid-th-font-weight` | Table header font weight |
+| `paidThColor` | `--paid-th-color` | Table header text color |
+| `paidTdFontSize` | `--paid-td-font-size` | Table data font size |
+| `paidTdFontWeight` | `--paid-td-font-weight` | Table data font weight |
+| `paidTdColor` | `--paid-td-color` | Table data text color |
+| `paidEmptyColor` | `--paid-empty-color` | “No usage data” message color |
+| `paidWrapperBg` | `--paid-wrapper-bg` | Outer wrapper background |
+| `paidWrapperBorder` | `--paid-wrapper-border` | Outer wrapper border |
+| `paidHeaderBg` | `--paid-header-bg` | Header bar background |
+| `paidHeaderBorderBottom` | `--paid-header-border-bottom` | Header bottom border |
+| `paidTableBg` | `--paid-table-bg` | Table background |
+| `paidThBg` | `--paid-th-bg` | Header cell background |
+| `paidThBorderBottom` | `--paid-th-border-bottom` | Header cell bottom border |
+| `paidTdBg` | `--paid-td-bg` | Data cell background |
+| `paidTdBorderBottom` | `--paid-td-border-bottom` | Data cell bottom border |
+| `paidRowHoverBg` | `--paid-row-hover-bg` | Data row hover background |
+
