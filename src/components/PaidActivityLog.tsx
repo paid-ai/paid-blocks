@@ -3,6 +3,32 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/activity-log-table.css';
 
+interface PaidStyleProperties {
+    paidTitleColor?: string;
+    paidTitleFontWeight?: string;
+    paidFontFamily?: string;
+    paidWrapperBorder?: string;
+    paidHeaderBorderBottom?: string;
+    paidThBorderBottom?: string;
+    paidTdBorderBottom?: string;
+    paidTdBg?: string;
+    paidTdFontWeight?: string;
+    paidTitleFontSize?: string;
+    paidToggleFontSize?: string;
+    paidToggleFontWeight?: string;
+    paidToggleColor?: string;
+    paidThFontSize?: string;
+    paidThFontWeight?: string;
+    paidThColor?: string;
+    paidTdFontSize?: string;
+    paidTdColor?: string;
+    paidEmptyColor?: string;
+    paidWrapperBg?: string;
+    paidHeaderBg?: string;
+    paidTableBg?: string;
+    paidThBg?: string;
+    paidRowHoverBg?: string;
+}
 interface UsageSummary {
     id: string;
     updatedAt: string;
@@ -24,13 +50,28 @@ interface UsageSummary {
 interface PaidActivityLogProps {
     accountExternalId: string;
     host?: string;
+    paidStyle?: PaidStyleProperties; // make it a seperate interface
 }
 
-export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ accountExternalId, host }) => {
+export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ accountExternalId, host, paidStyle = {} }) => {
     const [usageSummaries, setUsageSummaries] = useState<UsageSummary[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showAll, setShowAll] = useState(false);
+
+    // Convert paidStyle entries into CSS custom properties
+    const cssVariables: React.CSSProperties = Object.entries(paidStyle).reduce((vars, [key, value]) => {
+        let varName: string;
+        if (key.startsWith('--')) {
+            varName = key;
+        } else {
+            const raw = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+            varName = raw.startsWith('--') ? raw : `--${raw}`;
+        }
+        // @ts-ignore allow custom property
+        vars[varName] = value;
+        return vars;
+    }, {} as React.CSSProperties);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat("en-US", {
@@ -94,7 +135,7 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ accountExterna
     }
 
     return (
-        <div className="paid-activity-log-container" style={{ position: 'relative', minWidth: 0 }}>
+        <div className="paid-activity-log-container" style={{ position: 'relative', minWidth: 0, ...cssVariables }}>
             <div className="paid-activity-log-table-wrapper" style={{ position: 'static', width: '100%', height: 'auto', left: undefined, top: undefined, boxShadow: undefined, cursor: undefined }}>
                 <div className="paid-activity-log-header">
                     <h3 className="paid-activity-log-title">Paid.ai Activity Log</h3>

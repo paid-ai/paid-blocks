@@ -4,20 +4,20 @@
 .paid-activity-log-container {
   position: relative;
   min-width: 0;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-family: var(--paid-font-family, 'Roboto', Arial, Helvetica, sans-serif);
   width: 100%;
   box-sizing: border-box;
 }
 
 .paid-activity-log-table-wrapper {
   position: relative;
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--paid-wrapper-bg, #fff);
+  border: var(--paid-wrapper-border, 1px solid #e5e7eb);
   border-radius: 12px;
   box-shadow: 0 2px 16px 0 rgba(16, 24, 40, 0.08);
   overflow-x: auto;
   transition: box-shadow 0.2s;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-family: var(--paid-font-family, 'Roboto', Arial, Helvetica, sans-serif);
   width: 100%;
   min-width: 0;
 }
@@ -31,27 +31,27 @@
   justify-content: space-between;
   align-items: center;
   padding: 18px 24px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--paid-header-bg, #fff);
+  border-bottom: var(--paid-header-border-bottom, 1px solid #e5e7eb);
   border-radius: 12px 12px 0 0;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-family: var(--paid-font-family, 'Roboto', Arial, Helvetica, sans-serif);
 }
 .paid-activity-log-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1d2939;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-size: var(--paid-title-font-size, 1.1rem);
+  font-weight: var(--paid-title-font-weight, 600);
+  color: var(--paid-title-color, #1d2939);
+  font-family: var(--paid-font-family, 'Roboto', Arial, Helvetica, sans-serif);
 }
 .paid-activity-log-toggle-btn {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #2563eb;
+  font-size: var(--paid-toggle-font-size, 0.95rem);
+  font-weight: var(--paid-toggle-font-weight, 500);
+  color: var(--paid-toggle-color, #2563eb);
   background: none;
   border: none;
   cursor: pointer;
   text-decoration: none;
   padding: 0;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-family: var(--paid-font-family, 'Roboto', Arial, Helvetica, sans-serif);
 }
 
 /* Table styles */
@@ -62,8 +62,8 @@
   word-break: break-word;
   border-collapse: separate;
   border-spacing: 0;
-  background: #fff;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  background: var(--paid-table-bg, #fff);
+  font-family: var(--paid-font-family, 'Roboto', Arial, Helvetica, sans-serif);
 }
 .paid-activity-log-table th,
 .paid-activity-log-table td {
@@ -73,25 +73,27 @@
   word-break: break-word;
 }
 .paid-activity-log-table th {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #667085;
+  font-size: var(--paid-th-font-size, 1rem);
+  font-weight: var(--paid-th-font-weight, 500);
+  color: var(--paid-th-color, #667085);
   text-align: left;
   padding: 18px 24px;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--paid-th-bg, #f9fafb);
+  border-bottom: var(--paid-th-border-bottom, 1px solid #e5e7eb);
 }
 .paid-activity-log-table td {
-  font-size: 0.97rem;
-  color: #1d2939;
+  font-size: var(--paid-td-font-size, 0.97rem);
+  font-weight: var(--paid-td-font-weight, normal);
+  color: var(--paid-td-color, #1d2939);
+  background: var(--paid-td-bg, transparent);
   padding: 16px 24px;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: var(--paid-td-border-bottom, 1px solid #f1f1f1);
 }
 .paid-activity-log-table tr:last-child td {
   border-bottom: none;
 }
 .paid-activity-log-table tr:hover td {
-  background: #f3f4f6;
+  background: var(--paid-row-hover-bg, #f3f4f6);
 }
 .paid-activity-log-table th,
 .paid-activity-log-table td {
@@ -101,7 +103,7 @@
 /* Empty state */
 .paid-activity-log-empty {
   text-align: center;
-  color: #98a2b3;
+  color: var(--paid-empty-color, #98a2b3);
   padding: 40px 0;
   font-size: 1rem;
 }
