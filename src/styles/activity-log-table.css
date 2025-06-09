@@ -31,7 +31,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 18px 24px;
-  background: var(--paid-header-bg, #fff);
+  background: var(--paid-header-bg, #f8f9fa);
   border-bottom: var(--paid-header-border-bottom, 1px solid #e5e7eb);
   border-radius: 12px 12px 0 0;
   font-family: var(--paid-font-family, 'Roboto');
@@ -58,12 +58,14 @@
 .paid-activity-log-table {
   width: 100%;
   min-width: 0;
-  table-layout: auto;
+  table-layout: fixed;
   word-break: break-word;
   border-collapse: separate;
   border-spacing: 0;
-  background: var(--paid-table-bg, #fff);
-  font-family: var(--paid-font-family, 'Roboto');
+  background: var(--paid-table-bg);
+  font-family: var(--paid-font-family);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .paid-activity-log-table th,
 .paid-activity-log-table td {
@@ -71,6 +73,8 @@
   font-size: 0.95rem;
   white-space: normal;
   word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .paid-activity-log-table th {
   font-size: var(--paid-th-font-size, 1rem);

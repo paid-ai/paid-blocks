@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap');
+
+/* Container styles */
+.paid-container {
+  position: relative;
+  min-width: 0;
+  font-family: var(--paid-font-family, 'Roboto');
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.paid-container-wrapper {
+  position: relative;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  font-family: var(--paid-font-family, 'Roboto');
+  width: 100%;
+  min-width: 0;
+}
+
+/* Header styles */
+.paid-container-header {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 0 24px;
+  font-family: var(--paid-font-family, 'Roboto');
+  gap: 20px;
+}
+
+.paid-container-header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.paid-container-title {
+  font-size: var(--paid-title-font-size, 1.5rem);
+  font-weight: var(--paid-title-font-weight, 600);
+  color: var(--paid-title-color, #1d2939);
+  font-family: var(--paid-font-family, 'Roboto');
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.paid-container-description {
+  font-size: var(--paid-description-font-size, 0.95rem);
+  color: var(--paid-description-color, #667085);
+  font-family: var(--paid-font-family, 'Roboto');
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Tabs styles */
+.paid-container-tabs {
+  display: flex;
+  gap: 4px;
+  background: #e9ecef;
+  border-radius: 16px;
+  min-height: 48px;
+  position: relative;
+  padding: 4px;
+}
+
+.paid-container-tab {
+  font-size: var(--paid-toggle-font-size, 1rem);
+  font-weight: 500;
+  color: #6B7280;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
+  font-family: var(--paid-font-family, 'Roboto');
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-height: 40px;
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.paid-container-tab:hover {
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.paid-container-tab.active {
+  color: #1d2939;
+  font-weight: 600;
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.paid-container-tab:focus {
+  outline: none;
+}
+
+/* Content styles */
+.paid-container-content {
+  min-height: 50px;
+  font-family: var(--paid-font-family, 'Roboto');
+}
+
+/* Add extra spacing when no tabs are present */
+.paid-container-header:not(:has(.paid-container-tabs)) + .paid-container-content {
+  padding-top: 24px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .paid-container-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .paid-container-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .paid-container-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .paid-container-title {
+    font-size: var(--paid-title-font-size, 1.25rem);
+  }
+  
+  .paid-container-description {
+    font-size: var(--paid-description-font-size, 0.875rem);
+  }
+} 
