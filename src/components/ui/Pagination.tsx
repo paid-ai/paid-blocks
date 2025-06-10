@@ -58,160 +58,111 @@ export const Pagination: React.FC<PaginationProps> = ({
     const visiblePages = getVisiblePages();
 
     return (
-        <div className={`pagination-container ${className}`} style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: '6px',
-            padding: '16px 24px',
-            fontSize: '13px',
-            fontFamily: 'inherit',
-            width: '100%',
-            boxSizing: 'border-box'
-        }}>
-            <button
-                onClick={() => onPageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                style={{
-                    padding: '6px 12px',
-                    border: '1px solid #E5E7EB',
-                    backgroundColor: currentPage === 1 ? '#F9FAFB' : '#FFFFFF',
-                    color: currentPage === 1 ? '#9CA3AF' : '#374151',
-                    borderRadius: '6px',
-                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                    fontSize: '13px',
-                    fontWeight: '500',
-                    transition: 'all 0.15s ease',
-                    outline: 'none',
-                    userSelect: 'none'
-                }}
-                onMouseEnter={(e) => {
-                    if (currentPage !== 1) {
-                        e.currentTarget.style.backgroundColor = '#F3F4F6';
-                        e.currentTarget.style.borderColor = '#D1D5DB';
-                    }
-                }}
-                onMouseLeave={(e) => {
-                    if (currentPage !== 1) {
-                        e.currentTarget.style.backgroundColor = '#FFFFFF';
-                        e.currentTarget.style.borderColor = '#E5E7EB';
-                    }
-                }}
-                onMouseDown={(e) => {
-                    if (currentPage !== 1) {
-                        e.currentTarget.style.backgroundColor = '#E5E7EB';
-                    }
-                }}
-                onMouseUp={(e) => {
-                    if (currentPage !== 1) {
-                        e.currentTarget.style.backgroundColor = '#F3F4F6';
-                    }
-                }}
-            >
-                Previous
-            </button>
+        <>
+            <style>{`
+                .paid-pagination-btn {
+                    padding: 6px 12px;
+                    border: 1px solid #E5E7EB;
+                    background-color: var(--paid-button-bg-color, #FFFFFF) !important;
+                    color: var(--paid-primary-color, #374151) !important;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    fontSize: 13px;
+                    font-weight: 500;
+                    transition: all 0.15s ease;
+                    outline: none !important;
+                    user-select: none;
+                    -webkit-appearance: none !important;
+                    -moz-appearance: none !important;
+                    appearance: none !important;
+                    box-shadow: none !important;
+                }
+                
+                .paid-pagination-btn:hover:not(:disabled) {
+                    filter: brightness(0.9) !important;
+                    transform: translateY(-1px) !important;
+                    background-color: var(--paid-button-bg-color, #FFFFFF) !important;
+                }
+                
+                .paid-pagination-btn:active:not(:disabled) {
+                    filter: brightness(0.8) !important;
+                    transform: translateY(0px) !important;
+                    background-color: var(--paid-button-bg-color, #FFFFFF) !important;
+                }
+                
+                .paid-pagination-btn:focus:not(:disabled) {
+                    filter: brightness(0.9) !important;
+                    background-color: var(--paid-button-bg-color, #FFFFFF) !important;
+                    box-shadow: none !important;
+                    outline: none !important;
+                }
+                
+                .paid-pagination-btn:disabled {
+                    background-color: var(--paid-button-bg-color, #F9FAFB) !important;
+                    color: #9CA3AF !important;
+                    cursor: not-allowed;
+                    opacity: 0.6;
+                }
+                
+                .paid-pagination-btn.current-page {
+                    background-color: #F3F4F6 !important;
+                    color: var(--paid-primary-color, #111827) !important;
+                    font-weight: 600;
+                }
+                
+                .paid-pagination-btn.page-number {
+                    padding: 6px 10px;
+                    min-width: 32px;
+                }
+            `}</style>
+            <div className={`pagination-container ${className}`} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                gap: '6px',
+                padding: '16px 24px',
+                fontSize: '13px',
+                fontFamily: 'inherit',
+                width: '100%',
+                boxSizing: 'border-box'
+            }}>
+                <button
+                    onClick={() => onPageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="paid-pagination-btn"
+                >
+                    Previous
+                </button>
 
-            {visiblePages.map((page, index) => (
-                <React.Fragment key={index}>
-                    {page === '...' ? (
-                        <span style={{
-                            padding: '6px 4px',
-                            color: '#9CA3AF',
-                            fontSize: '13px'
-                        }}>
-                            ...
-                        </span>
-                    ) : (
-                        <button
-                            onClick={() => onPageChange(page as number)}
-                            style={{
-                                padding: '6px 10px',
-                                border: '1px solid #E5E7EB',
-                                backgroundColor: currentPage === page ? '#F3F4F6' : '#FFFFFF',
-                                color: currentPage === page ? '#111827' : '#374151',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                fontSize: '13px',
-                                fontWeight: currentPage === page ? '600' : '500',
-                                minWidth: '32px',
-                                transition: 'all 0.15s ease',
-                                outline: 'none',
-                                userSelect: 'none'
-                            }}
-                            onMouseEnter={(e) => {
-                                if (currentPage !== page) {
-                                    e.currentTarget.style.backgroundColor = '#F9FAFB';
-                                    e.currentTarget.style.borderColor = '#D1D5DB';
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (currentPage !== page) {
-                                    e.currentTarget.style.backgroundColor = '#FFFFFF';
-                                    e.currentTarget.style.borderColor = '#E5E7EB';
-                                } else {
-                                    e.currentTarget.style.backgroundColor = '#F3F4F6';
-                                }
-                            }}
-                            onMouseDown={(e) => {
-                                if (currentPage !== page) {
-                                    e.currentTarget.style.backgroundColor = '#E5E7EB';
-                                }
-                            }}
-                            onMouseUp={(e) => {
-                                if (currentPage !== page) {
-                                    e.currentTarget.style.backgroundColor = '#F9FAFB';
-                                } else {
-                                    e.currentTarget.style.backgroundColor = '#F3F4F6';
-                                }
-                            }}
-                        >
-                            {page}
-                        </button>
-                    )}
-                </React.Fragment>
-            ))}
+                {visiblePages.map((page, index) => (
+                    <React.Fragment key={index}>
+                        {page === '...' ? (
+                            <span style={{
+                                padding: '6px 4px',
+                                color: '#9CA3AF',
+                                fontSize: '13px'
+                            }}>
+                                ...
+                            </span>
+                        ) : (
+                            <button
+                                onClick={() => onPageChange(page as number)}
+                                className={`paid-pagination-btn page-number ${currentPage === page ? 'current-page' : ''}`}
+                            >
+                                {page}
+                            </button>
+                        )}
+                    </React.Fragment>
+                ))}
 
-            <button
-                onClick={() => onPageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                style={{
-                    padding: '6px 12px',
-                    border: '1px solid #E5E7EB',
-                    backgroundColor: currentPage === totalPages ? '#F9FAFB' : '#FFFFFF',
-                    color: currentPage === totalPages ? '#9CA3AF' : '#374151',
-                    borderRadius: '6px',
-                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                    fontSize: '13px',
-                    fontWeight: '500',
-                    transition: 'all 0.15s ease',
-                    outline: 'none',
-                    userSelect: 'none'
-                }}
-                onMouseEnter={(e) => {
-                    if (currentPage !== totalPages) {
-                        e.currentTarget.style.backgroundColor = '#F3F4F6';
-                        e.currentTarget.style.borderColor = '#D1D5DB';
-                    }
-                }}
-                onMouseLeave={(e) => {
-                    if (currentPage !== totalPages) {
-                        e.currentTarget.style.backgroundColor = '#FFFFFF';
-                        e.currentTarget.style.borderColor = '#E5E7EB';
-                    }
-                }}
-                onMouseDown={(e) => {
-                    if (currentPage !== totalPages) {
-                        e.currentTarget.style.backgroundColor = '#E5E7EB';
-                    }
-                }}
-                onMouseUp={(e) => {
-                    if (currentPage !== totalPages) {
-                        e.currentTarget.style.backgroundColor = '#F3F4F6';
-                    }
-                }}
-            >
-                Next
-            </button>
-        </div>
+                <button
+                    onClick={() => onPageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="paid-pagination-btn"
+                >
+                    Next
+                </button>
+            </div>
+        </>
     );
 }; 

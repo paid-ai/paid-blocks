@@ -1,15 +1,16 @@
 # Paid Next.js Client SDK
  
-Easily embed the Paid.ai Activity Log component in your Next.js app to display agent usage for specific accounts.
+Easily embed Paid.ai components in your Next.js app to display payments, invoices, and activity logs for specific accounts.
 
 ---
 
 ## Features
 
-- Plug-and-play React component for displaying agent activity logs.
-- Designed for Next.js 13+ (App Router).
-- Fetches usage data for a given account using your API key.
-- Fully customizable and responsive.
+- **PaidContainer**: A universal container component with tabbed interface for all data views
+- **Individual Components**: Standalone components for payments, invoices, and activity logs
+- **Universal Styling**: Consistent styling system across all components
+- **Plug-and-play**: Designed for Next.js 13+ (App Router)
+- **Fully Responsive**: Works seamlessly across all device sizes
 
 ---
 
@@ -23,68 +24,135 @@ yarn add @agentpaid/paid-nextjs-client
 
 ---
 
-## Usage
+## Components
 
-1. **Import the component:**
+### PaidContainer (Recommended)
 
-```tsx
-import { PaidActivityLog } from '@agentpaid/paid-nextjs-client';
-```
-
-2. **Add it to your page or component:**
+The `PaidContainer` is an all-in-one tabbed interface that displays payments, invoices, and activity logs in a single component. This is the easiest way to integrate all Paid.ai data views.
 
 ```tsx
-<PaidActivityLog accountExternalId="your_external_account_id" />
+import { PaidContainer } from '@agentpaid/paid-nextjs-client';
+
+<PaidContainer 
+  accountExternalId="customer_123"
+  paidStyle={{
+    fontFamily: 'Inter',
+    primaryColor: '#1f2937',
+    containerBackgroundColor: '#f8fafc',
+    buttonBgColor: '#3b82f6'
+  }}
+/>
 ```
 
-- `accountExternalId` (string, required): The customer external ID of the account whose activity you want to display.
+### Individual Components
+
+For more granular control, you can use individual components:
+
+```tsx
+import { 
+  PaidPaymentsTable, 
+  PaidInvoiceTable, 
+  PaidActivityLog 
+} from '@agentpaid/paid-nextjs-client';
+
+// Payments only
+<PaidPaymentsTable accountExternalId="customer_123" />
+
+// Invoices only  
+<PaidInvoiceTable accountExternalId="customer_123" />
+
+// Activity log only
+<PaidActivityLog accountExternalId="customer_123" />
+```
 
 ---
 
-## API Route Setup
+## API Routes Setup
 
-To enable the PaidActivityLog component, you must create an API route in your Next.js app that proxies requests to Paid.ai using your API key.
-
-**You must also create a `.env.local` file in your project root and add your Paid.ai API key:**
+You need to create API routes for each data type. **First, add your Paid.ai API key to `.env.local`:**
 
 ```env
 PAID_API_KEY=your_paid_ai_api_key_here
 ```
 
-**Run this command to generate the required directory and file:**
+### Required API Routes
 
+**1. Payments API Route**
+```bash
+mkdir -p "src/app/api/payments/[accountExternalId]" && touch "src/app/api/payments/[accountExternalId]/route.ts"
+```
+
+Add to `src/app/api/payments/[accountExternalId]/route.ts`:
+```ts
+import { handlePaidPayments } from '@agentpaid/paid-nextjs-client';
+
+export const GET = handlePaidPayments(process.env.PAID_API_KEY!);
+```
+
+**2. Invoices API Route**
+```bash
+mkdir -p "src/app/api/invoices/[accountExternalId]" && touch "src/app/api/invoices/[accountExternalId]/route.ts"
+```
+
+Add to `src/app/api/invoices/[accountExternalId]/route.ts`:
+```ts
+import { handlePaidInvoices } from '@agentpaid/paid-nextjs-client';
+
+export const GET = handlePaidInvoices(process.env.PAID_API_KEY!);
+```
+
+**3. Activity Log API Route**
 ```bash
 mkdir -p "src/app/api/usage/[accountExternalId]" && touch "src/app/api/usage/[accountExternalId]/route.ts"
 ```
 
-**Then, add the following code to `src/app/api/usage/[accountExternalId]/route.ts`:**
-
+Add to `src/app/api/usage/[accountExternalId]/route.ts`:
 ```ts
 import { handlePaidUsage } from '@agentpaid/paid-nextjs-client';
 
 export const GET = handlePaidUsage(process.env.PAID_API_KEY!);
 ```
 
-This will securely proxy usage requests to Paid.ai using your API key from environment variables.
-
 ---
 
-## Example
+## Complete Example
 
 ```tsx
-import { PaidActivityLog } from '@agentpaid/paid-nextjs-client';
+import { PaidContainer } from '@agentpaid/paid-nextjs-client';
 
-export default function AgentDashboard() {
+export default function CustomerDashboard() {
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>Agent Dashboard</h1>
+      <h1>Customer Dashboard</h1>
 
       <section style={{ marginBottom: '2rem' }}>
         <p><strong>Welcome back!</strong></p>
-        <p>Here’s a breakdown of recent activity for account <code>customer_123</code>.</p>
+        <p>Here's a complete overview for account <code>customer_123</code>.</p>
       </section>
 
-      <PaidActivityLog accountExternalId="customer_123" />
+      <PaidContainer 
+        accountExternalId="customer_123"
+        paidStyle={{
+          // Global styling
+          fontFamily: 'Inter, sans-serif',
+          primaryColor: '#1f2937',
+          secondaryColor: '#6b7280',
+          
+          // Container & backgrounds
+          containerBackgroundColor: '#f8fafc',
+          tableBackgroundColor: '#ffffff',
+          tableHeaderBackgroundColor: '#f1f5f9',
+          
+          // Tabs
+          tabBackgroundColor: '#e2e8f0',
+          tabActiveBackgroundColor: '#3b82f6',
+          tabHoverBackgroundColor: '#cbd5e1',
+          
+          // Interactive elements
+          tableHoverColor: '#f1f5f9',
+          buttonBgColor: '#3b82f6'
+        }}
+      />
 
       <section style={{ marginTop: '2rem' }}>
         <p>Need help? Visit our <a href="/support">support center</a>.</p>
@@ -96,58 +164,92 @@ export default function AgentDashboard() {
 
 ---
 
-## Styling & Customization
+## Styling System
 
-The `PaidActivityLog` component is fully customizable through the `paidStyle` prop. You can override the visual design of the component, such as fonts, colors, borders, and layout, by passing an object with our predefined styling variables.
+The Paid.ai components use a simplified, universal styling system. All components accept a `paidStyle` prop with the following properties:
 
-These custom CSS properties map directly to visual elements inside the component and allow full control over typography, layout, and colors without modifying any stylesheets.
+### Universal Style Properties
 
-## Example
+| Property | Description | Default |
+|----------|-------------|---------|
+| `fontFamily` | Global font family for all text | `'Roboto'` |
+| `primaryColor` | Primary text color | `'#374151'` |
+| `secondaryColor` | Secondary text color | `'#6b7280'` |
+| `containerBackgroundColor` | Main container background | `'#f8f9fa'` |
+| `tableBackgroundColor` | Table body background | `'#ffffff'` |
+| `tableHeaderBackgroundColor` | Table header background | `'#f9fafb'` |
+| `tabBackgroundColor` | Tab background (PaidContainer only) | `'#e2e8f0'` |
+| `tabActiveBackgroundColor` | Active tab background | `'#3b82f6'` |
+| `tabHoverBackgroundColor` | Tab hover background | `'#cbd5e1'` |
+| `tableHoverColor` | Table row hover background | `'#f3f4f6'` |
+| `buttonBgColor` | Background for buttons, status badges, and pagination | `'#ffffff'` |
 
-```html
-<PaidActivityLog 
-  accountExternalId="customer_123" 
+### Styling Inheritance
+
+- **PaidContainer**: Styles applied here automatically inherit to all child components
+- **Individual Components**: Can override inherited styles or define their own when used standalone
+- **Flexible**: Mix and match - style globally via PaidContainer or individually per component
+
+### Example: Dark Theme
+
+```tsx
+<PaidContainer 
+  accountExternalId="customer_123"
   paidStyle={{
-    paidTitleColor: '#ff0000',
-    paidTitleFontWeight: 'bold',
-    paidFontFamily: 'Comic Sans MS, Comic Sans, sans-serif',
-    paidWrapperBorder: 'none',
-    paidHeaderBorderBottom: 'none',
-    paidThBorderBottom: 'none',
-    paidTdBorderBottom: 'none',
-    paidTdColor: '#00ff00',
-    paidTdBg: '#0000ff',
-    paidRowHoverBg: '#000000',
+    fontFamily: 'Inter',
+    primaryColor: '#f9fafb',
+    secondaryColor: '#d1d5db',
+    containerBackgroundColor: '#1f2937',
+    tableBackgroundColor: '#374151',
+    tableHeaderBackgroundColor: '#4b5563',
+    tabBackgroundColor: '#4b5563',
+    tabActiveBackgroundColor: '#3b82f6',
+    tabHoverBackgroundColor: '#6b7280',
+    tableHoverColor: '#4b5563',
+    buttonBgColor: '#6b7280'
   }}
 />
 ```
 
-## Available Style Variables
+### Example: Individual Component Styling
 
-| Variable Name | CSS Custom Property | Description |
-| --- | --- | --- |
-| `paidFontFamily` | `--paid-font-family` | Global font for all content |
-| `paidTitleFontSize` | `--paid-title-font-size` | Title font size |
-| `paidTitleFontWeight` | `--paid-title-font-weight` | Title font weight |
-| `paidTitleColor` | `--paid-title-color` | Title color |
-| `paidToggleFontSize` | `--paid-toggle-font-size` | Toggle font size |
-| `paidToggleFontWeight` | `--paid-toggle-font-weight` | Toggle font weight |
-| `paidToggleColor` | `--paid-toggle-color` | Toggle color |
-| `paidThFontSize` | `--paid-th-font-size` | Table header font size |
-| `paidThFontWeight` | `--paid-th-font-weight` | Table header font weight |
-| `paidThColor` | `--paid-th-color` | Table header text color |
-| `paidTdFontSize` | `--paid-td-font-size` | Table data font size |
-| `paidTdFontWeight` | `--paid-td-font-weight` | Table data font weight |
-| `paidTdColor` | `--paid-td-color` | Table data text color |
-| `paidEmptyColor` | `--paid-empty-color` | “No usage data” message color |
-| `paidWrapperBg` | `--paid-wrapper-bg` | Outer wrapper background |
-| `paidWrapperBorder` | `--paid-wrapper-border` | Outer wrapper border |
-| `paidHeaderBg` | `--paid-header-bg` | Header bar background |
-| `paidHeaderBorderBottom` | `--paid-header-border-bottom` | Header bottom border |
-| `paidTableBg` | `--paid-table-bg` | Table background |
-| `paidThBg` | `--paid-th-bg` | Header cell background |
-| `paidThBorderBottom` | `--paid-th-border-bottom` | Header cell bottom border |
-| `paidTdBg` | `--paid-td-bg` | Data cell background |
-| `paidTdBorderBottom` | `--paid-td-border-bottom` | Data cell bottom border |
-| `paidRowHoverBg` | `--paid-row-hover-bg` | Data row hover background |
+```tsx
+<PaidPaymentsTable 
+  accountExternalId="customer_123"
+  paidStyle={{
+    primaryColor: '#dc2626',
+    buttonBgColor: '#fef2f2',
+    tableHoverColor: '#fee2e2'
+  }}
+/>
+```
 
+---
+
+## Props
+
+### PaidContainer
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `accountExternalId` | `string` | ✅ | Customer external ID |
+| `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
+
+### Individual Components
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `accountExternalId` | `string` | ✅ | Customer external ID |
+| `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
+
+---
+
+## Features
+
+- **Tabbed Interface**: PaidContainer provides easy navigation between data views
+- **Pagination**: All tables include built-in pagination for large datasets
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Loading States**: Elegant loading indicators while data fetches
+- **Error Handling**: Graceful error messages for failed requests
+- **Caching**: Built-in request caching for improved performance
+- **PDF Preview**: Invoice table includes PDF preview and download functionality

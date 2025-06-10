@@ -11,7 +11,7 @@
 
 .paid-container-wrapper {
   position: relative;
-  background: #f8f9fa;
+  background: var(--paid-container-background-color, #f8f9fa);
   border: 1px solid #e9ecef;
   border-radius: 8px;
   overflow: hidden;
@@ -36,17 +36,17 @@
 }
 
 .paid-container-title {
-  font-size: var(--paid-title-font-size, 1.5rem);
-  font-weight: var(--paid-title-font-weight, 600);
-  color: var(--paid-title-color, #1d2939);
+  font-size: var(--paid-h2-font-size, 1.5rem);
+  font-weight: 600;
+  color: var(--paid-primary-color, #1d2939);
   font-family: var(--paid-font-family, 'Roboto');
   margin: 0 0 8px 0;
   line-height: 1.3;
 }
 
 .paid-container-description {
-  font-size: var(--paid-description-font-size, 0.95rem);
-  color: var(--paid-description-color, #667085);
+  font-size: var(--paid-paragraph-font-size, 0.95rem);
+  color: var(--paid-secondary-color, #667085);
   font-family: var(--paid-font-family, 'Roboto');
   margin: 0;
   line-height: 1.4;
@@ -56,7 +56,7 @@
 .paid-container-tabs {
   display: flex;
   gap: 4px;
-  background: #e9ecef;
+  background: var(--paid-tab-background-color, #e9ecef);
   border-radius: 16px;
   min-height: 48px;
   position: relative;
@@ -64,9 +64,9 @@
 }
 
 .paid-container-tab {
-  font-size: var(--paid-toggle-font-size, 1rem);
+  font-size: var(--paid-paragraph-font-size, 1rem);
   font-weight: 500;
-  color: #6B7280;
+  color: var(--paid-tab-text-color, var(--paid-secondary-color, #6B7280));
   background: none;
   border: none;
   border-radius: 12px;
@@ -88,19 +88,24 @@
 }
 
 .paid-container-tab:hover {
-  background: white;
+  background: var(--paid-tab-hover-background-color, white);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  color: var(--paid-tab-hover-text-color, var(--paid-hover-color, var(--paid-primary-color, #1d2939)));
 }
 
 .paid-container-tab.active {
-  color: #1d2939;
+  color: var(--paid-tab-active-text-color, var(--paid-primary-color, #1d2939));
   font-weight: 600;
-  background: white;
+  background: var(--paid-tab-active-background-color, white);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 .paid-container-tab:focus {
   outline: none;
+}
+
+.paid-container-tab:active {
+  color: var(--paid-pressed-color, var(--paid-primary-color, #1d2939));
 }
 
 /* Content styles */
@@ -134,10 +139,10 @@
   }
   
   .paid-container-title {
-    font-size: var(--paid-title-font-size, 1.25rem);
+    font-size: var(--paid-h2-font-size, 1.25rem);
   }
   
   .paid-container-description {
-    font-size: var(--paid-description-font-size, 0.875rem);
+    font-size: var(--paid-paragraph-font-size, 0.875rem);
   }
 } 

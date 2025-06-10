@@ -1,115 +1,127 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-/* Container styles */
+/* Activity Log Table Styles */
 .paid-activity-log-container {
-  position: relative;
-  min-width: 0;
-  font-family: var(--paid-font-family, 'Roboto');
-  width: 100%;
-  box-sizing: border-box;
+    position: relative;
+    min-width: 0;
+    font-family: var(--paid-font-family, 'Roboto');
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .paid-activity-log-table-wrapper {
-  position: relative;
-  background: var(--paid-wrapper-bg, #fff);
-  border: var(--paid-wrapper-border, 1px solid #e5e7eb);
-  border-radius: 12px;
-  box-shadow: 0 2px 16px 0 rgba(16, 24, 40, 0.08);
-  overflow-x: auto;
-  transition: box-shadow 0.2s;
-  font-family: var(--paid-font-family, 'Roboto');
-  width: 100%;
-  min-width: 0;
+    position: relative;
+    background: var(--paid-table-background-color, #ffffff);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px 0 rgba(16, 24, 40, 0.08);
+    overflow-x: auto;
+    transition: box-shadow 0.2s;
+    font-family: var(--paid-font-family, 'Roboto');
+    width: 100%;
+    min-width: 0;
 }
+
 .paid-activity-log-table-wrapper:active {
-  box-shadow: 0 4px 24px 0 rgba(16, 24, 40, 0.16);
+    box-shadow: 0 4px 24px 0 rgba(16, 24, 40, 0.16);
 }
 
-/* Header styles */
 .paid-activity-log-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  background: var(--paid-header-bg, #f8f9fa);
-  border-bottom: var(--paid-header-border-bottom, 1px solid #e5e7eb);
-  border-radius: 12px 12px 0 0;
-  font-family: var(--paid-font-family, 'Roboto');
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--paid-header-padding, 18px 24px);
+    background: var(--paid-container-background-color, #f8f9fa);
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 12px 12px 0 0;
+    font-family: var(--paid-font-family, 'Roboto');
 }
+
 .paid-activity-log-title {
-  font-size: var(--paid-title-font-size, 1.1rem);
-  font-weight: var(--paid-title-font-weight, 600);
-  color: var(--paid-title-color, #1d2939);
-  font-family: var(--paid-font-family, 'Roboto');
-}
-.paid-activity-log-toggle-btn {
-  font-size: var(--paid-toggle-font-size, 0.95rem);
-  font-weight: var(--paid-toggle-font-weight, 500);
-  color: var(--paid-toggle-color, #2563eb);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  padding: 0;
-  font-family: var(--paid-font-family, 'Roboto');
+    margin: 0;
+    font-size: var(--paid-h3-font-size, 1.1rem);
+    font-weight: 600;
+    color: var(--paid-primary-color, #1d2939);
+    font-family: var(--paid-font-family, 'Roboto');
 }
 
-/* Table styles */
 .paid-activity-log-table {
-  width: 100%;
-  min-width: 0;
-  table-layout: fixed;
-  word-break: break-word;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--paid-table-bg);
-  font-family: var(--paid-font-family);
-  max-width: 100%;
-  box-sizing: border-box;
-}
-.paid-activity-log-table th,
-.paid-activity-log-table td {
-  padding: 8px 8px;
-  font-size: 0.95rem;
-  white-space: normal;
-  word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.paid-activity-log-table th {
-  font-size: var(--paid-th-font-size, 1rem);
-  font-weight: var(--paid-th-font-weight, 500);
-  color: var(--paid-th-color, #667085);
-  text-align: left;
-  padding: 18px 24px;
-  background: var(--paid-th-bg, #f9fafb);
-  border-bottom: var(--paid-th-border-bottom, 1px solid #e5e7eb);
-}
-.paid-activity-log-table td {
-  font-size: var(--paid-td-font-size, 0.97rem);
-  font-weight: var(--paid-td-font-weight, normal);
-  color: var(--paid-td-color, #1d2939);
-  background: var(--paid-td-bg, transparent);
-  padding: 16px 24px;
-  border-bottom: var(--paid-td-border-bottom, 1px solid #f1f1f1);
-}
-.paid-activity-log-table tr:last-child td {
-  border-bottom: none;
-}
-.paid-activity-log-table tr:hover td {
-  background: var(--paid-row-hover-bg, #f3f4f6);
-}
-.paid-activity-log-table th,
-.paid-activity-log-table td {
-  white-space: nowrap;
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    word-break: break-word;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--paid-table-background-color, #ffffff);
+    font-family: var(--paid-font-family, 'Roboto');
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-/* Empty state */
+.paid-activity-log-table th,
+.paid-activity-log-table td {
+    padding: var(--paid-cell-padding, 8px 8px);
+    font-size: var(--paid-paragraph-font-size, 0.95rem);
+    white-space: normal;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.paid-activity-log-table th {
+    font-size: var(--paid-paragraph-font-size, 1rem);
+    font-weight: 500;
+    color: var(--paid-table-header-color, var(--paid-secondary-color, #667085));
+    text-align: left;
+    padding: var(--paid-header-padding, 18px 24px);
+    background: var(--paid-table-header-background-color, #f9fafb);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.paid-activity-log-table td {
+    font-size: var(--paid-paragraph-font-size, 0.97rem);
+    font-weight: normal;
+    color: var(--paid-table-cell-color, var(--paid-primary-color, #1d2939));
+    background: transparent;
+    padding: var(--paid-cell-padding, 16px 24px);
+    border-bottom: 1px solid #f1f1f1;
+    vertical-align: middle;
+}
+
+.paid-activity-log-table tr:last-child td {
+    border-bottom: none;
+}
+
+.paid-activity-log-table tbody tr:hover td {
+    background: var(--paid-table-hover-color, #f3f4f6);
+}
+
+.paid-activity-log-table th,
+.paid-activity-log-table td {
+    white-space: nowrap;
+}
+
+/* Empty State */
 .paid-activity-log-empty {
-  text-align: center;
-  color: var(--paid-empty-color, #98a2b3);
-  padding: 40px 0;
-  font-size: 1rem;
+    text-align: center;
+    color: var(--paid-secondary-color, #98a2b3);
+    padding: 40px 0;
+    font-size: var(--paid-paragraph-font-size, 1rem);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .paid-activity-log-table th,
+    .paid-activity-log-table td {
+        padding: var(--paid-cell-padding, 12px 16px);
+        font-size: var(--paid-paragraph-font-size, 0.8rem);
+    }
+    
+    .paid-activity-log-table {
+        min-width: 600px;
+    }
 }
 
 /* Resize handles */

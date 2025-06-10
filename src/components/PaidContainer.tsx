@@ -10,30 +10,28 @@ const PaidContainerContext = createContext<boolean>(false);
 export const useIsInContainer = () => useContext(PaidContainerContext);
 
 interface PaidStyleProperties {
-    paidTitleColor?: string;
-    paidTitleFontWeight?: string;
-    paidFontFamily?: string;
-    paidWrapperBorder?: string;
-    paidHeaderBorderBottom?: string;
-    paidThBorderBottom?: string;
-    paidTdBorderBottom?: string;
-    paidTdBg?: string;
-    paidTdFontWeight?: string;
-    paidTitleFontSize?: string;
-    paidToggleFontSize?: string;
-    paidToggleFontWeight?: string;
-    paidToggleColor?: string;
-    paidThFontSize?: string;
-    paidThFontWeight?: string;
-    paidThColor?: string;
-    paidTdFontSize?: string;
-    paidTdColor?: string;
-    paidEmptyColor?: string;
-    paidWrapperBg?: string;
-    paidHeaderBg?: string;
-    paidTableBg?: string;
-    paidThBg?: string;
-    paidRowHoverBg?: string;
+    // Global - Font
+    fontFamily?: string;
+    
+    // Global - Font Colors
+    primaryColor?: string;
+    secondaryColor?: string;
+    
+    // Background Colors
+    containerBackgroundColor?: string;
+    tableBackgroundColor?: string;
+    tableHeaderBackgroundColor?: string;
+    
+    // Tab Colors
+    tabBackgroundColor?: string;
+    tabActiveBackgroundColor?: string;
+    tabHoverBackgroundColor?: string;
+    
+    // Table Hover
+    tableHoverColor?: string;
+    
+    // Button Background (Status badges & Pagination)
+    buttonBgColor?: string;
 }
 
 interface PaidContainerTab {
@@ -63,15 +61,27 @@ export const PaidContainer: React.FC<PaidContainerProps> = ({
 
     // Convert paidStyle entries into CSS custom properties
     const cssVariables: React.CSSProperties = Object.entries(paidStyle).reduce((vars, [key, value]) => {
-        let varName: string;
-        if (key.startsWith('--')) {
-            varName = key;
-        } else {
-            const raw = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-            varName = raw.startsWith('--') ? raw : `--${raw}`;
+        // Map simplified properties to CSS custom properties
+        const propertyMap: Record<string, string> = {
+            fontFamily: '--paid-font-family',
+            primaryColor: '--paid-primary-color',
+            secondaryColor: '--paid-secondary-color',
+            containerBackgroundColor: '--paid-container-background-color',
+            tableBackgroundColor: '--paid-table-background-color',
+            tableHeaderBackgroundColor: '--paid-table-header-background-color',
+            tabBackgroundColor: '--paid-tab-background-color',
+            tabActiveBackgroundColor: '--paid-tab-active-background-color',
+            tabHoverBackgroundColor: '--paid-tab-hover-background-color',
+            tableHoverColor: '--paid-table-hover-color',
+            buttonBgColor: '--paid-button-bg-color'
+        };
+
+        const cssProperty = propertyMap[key];
+        if (cssProperty) {
+            // @ts-ignore allow custom property
+            vars[cssProperty] = value;
         }
-        // @ts-ignore allow custom property
-        vars[varName] = value;
+        
         return vars;
     }, {} as React.CSSProperties);
 

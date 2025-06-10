@@ -7,30 +7,28 @@ import { Pagination } from './ui/Pagination';
 import '../styles/paid-payments-table.css';
 
 interface PaidStyleProperties {
-    paidTitleColor?: string;
-    paidTitleFontWeight?: string;
-    paidFontFamily?: string;
-    paidWrapperBorder?: string;
-    paidHeaderBorderBottom?: string;
-    paidThBorderBottom?: string;
-    paidTdBorderBottom?: string;
-    paidTdBg?: string;
-    paidTdFontWeight?: string;
-    paidTitleFontSize?: string;
-    paidToggleFontSize?: string;
-    paidToggleFontWeight?: string;
-    paidToggleColor?: string;
-    paidThFontSize?: string;
-    paidThFontWeight?: string;
-    paidThColor?: string;
-    paidTdFontSize?: string;
-    paidTdColor?: string;
-    paidEmptyColor?: string;
-    paidWrapperBg?: string;
-    paidHeaderBg?: string;
-    paidTableBg?: string;
-    paidThBg?: string;
-    paidRowHoverBg?: string;
+    // Global - Font
+    fontFamily?: string;
+    
+    // Global - Font Colors
+    primaryColor?: string;
+    secondaryColor?: string;
+    
+    // Background Colors
+    containerBackgroundColor?: string;
+    tableBackgroundColor?: string;
+    tableHeaderBackgroundColor?: string;
+    
+    // Tab Colors
+    tabBackgroundColor?: string;
+    tabActiveBackgroundColor?: string;
+    tabHoverBackgroundColor?: string;
+    
+    // Table Hover
+    tableHoverColor?: string;
+    
+    // Button Background (Status badges & Pagination)
+    buttonBgColor?: string;
 }
 
 interface Payment {
@@ -74,15 +72,29 @@ export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({
 
     // Convert paidStyle entries into CSS custom properties
     const cssVariables: React.CSSProperties = Object.entries(paidStyle).reduce((vars, [key, value]) => {
-        let varName: string;
-        if (key.startsWith('--')) {
-            varName = key;
-        } else {
-            const raw = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-            varName = raw.startsWith('--') ? raw : `--${raw}`;
+        if (value !== undefined && value !== null && value !== '') {
+            // Map simplified properties to CSS custom properties
+            const propertyMap: Record<string, string> = {
+                fontFamily: '--paid-font-family',
+                primaryColor: '--paid-primary-color',
+                secondaryColor: '--paid-secondary-color',
+                containerBackgroundColor: '--paid-container-background-color',
+                tableBackgroundColor: '--paid-table-background-color',
+                tableHeaderBackgroundColor: '--paid-table-header-background-color',
+                tabBackgroundColor: '--paid-tab-background-color',
+                tabActiveBackgroundColor: '--paid-tab-active-background-color',
+                tabHoverBackgroundColor: '--paid-tab-hover-background-color',
+                tableHoverColor: '--paid-table-hover-color',
+                buttonBgColor: '--paid-button-bg-color'
+            };
+
+            const cssProperty = propertyMap[key];
+            if (cssProperty) {
+                // @ts-ignore allow custom property
+                vars[cssProperty] = value;
+            }
         }
-        // @ts-ignore allow custom property
-        vars[varName] = value;
+        
         return vars;
     }, {} as React.CSSProperties);
 
@@ -142,13 +154,6 @@ export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({
                     cacheKey,
                     CACHE_TTL.DATA
                 );
-                
-                // TEMPORARILY DISABLED: Direct fetch without caching
-                // const response = await fetch(`/api/payments/${accountExternalId}`);
-                // if (!response.ok) {
-                //     throw new Error(`Failed to fetch: ${response.statusText}`);
-                // }
-                // const data = await response.json();
                 
                 console.log('PaidPaymentsTable: Received data', data);
                 setPayments(data.data || []);
@@ -215,7 +220,7 @@ export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({
                             ) : (
                                 currentPayments.map((payment) => (
                                     <tr key={payment.id}>
-                                        <td>
+                                        <td style={{ fontWeight: 500 }}>
                                             <div className="paid-payment-number">
                                                 <span>PAY-1</span>
                                             </div>

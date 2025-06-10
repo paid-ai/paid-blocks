@@ -11,8 +11,8 @@
 
 .paid-invoice-table-wrapper {
   position: relative;
-  background: var(--paid-wrapper-bg, #fff);
-  border: var(--paid-wrapper-border, 1px solid #e5e7eb);
+  background: var(--paid-table-background-color, #fff);
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
   box-shadow: 0 2px 16px 0 rgba(16, 24, 40, 0.08);
   overflow-x: auto;
@@ -30,16 +30,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
-  background: var(--paid-header-bg, #f8f9fa);
-  border-bottom: var(--paid-header-border-bottom, 1px solid #e5e7eb);
+  padding: var(--paid-header-padding, 18px 24px);
+  background: var(--paid-container-background-color, #f8f9fa);
+  border-bottom: 1px solid #e5e7eb;
   border-radius: 12px 12px 0 0;
   font-family: var(--paid-font-family, 'Roboto');
 }
 .paid-invoice-title {
-  font-size: var(--paid-title-font-size, 1.1rem);
-  font-weight: var(--paid-title-font-weight, 600);
-  color: var(--paid-title-color, #1d2939);
+  margin: 0;
+  font-size: var(--paid-h3-font-size, 1.1rem);
+  font-weight: 600;
+  color: var(--paid-primary-color, #1d2939);
   font-family: var(--paid-font-family, 'Roboto');
 }
 
@@ -51,42 +52,42 @@
   word-break: break-word;
   border-collapse: separate;
   border-spacing: 0;
-  background: var(--paid-table-bg, #fff);
+  background: var(--paid-table-background-color, #fff);
   font-family: var(--paid-font-family, 'Roboto');
   max-width: 100%;
   box-sizing: border-box;
 }
 .paid-invoice-table th,
 .paid-invoice-table td {
-  padding: 8px 8px;
-  font-size: 0.95rem;
+  padding: var(--paid-cell-padding, 8px 8px);
+  font-size: var(--paid-paragraph-font-size, 0.95rem);
   white-space: normal;
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .paid-invoice-table th {
-  font-size: var(--paid-th-font-size, 1rem);
-  font-weight: var(--paid-th-font-weight, 500);
-  color: var(--paid-th-color, #667085);
+  font-size: var(--paid-paragraph-font-size, 1rem);
+  font-weight: 500;
+  color: var(--paid-table-header-color, var(--paid-secondary-color, #667085));
   text-align: left;
-  padding: 18px 24px;
-  background: var(--paid-th-bg, #f9fafb);
-  border-bottom: var(--paid-th-border-bottom, 1px solid #e5e7eb);
+  padding: var(--paid-header-padding, 18px 24px);
+  background: var(--paid-table-header-background-color, #f9fafb);
+  border-bottom: 1px solid #e5e7eb;
 }
 .paid-invoice-table td {
-  font-size: var(--paid-td-font-size, 0.97rem);
-  font-weight: var(--paid-td-font-weight, normal);
-  color: var(--paid-td-color, #1d2939);
-  background: var(--paid-td-bg, transparent);
-  padding: 16px 24px;
-  border-bottom: var(--paid-td-border-bottom, 1px solid #f1f1f1);
+  font-size: var(--paid-paragraph-font-size, 0.97rem);
+  font-weight: normal;
+  color: var(--paid-table-cell-color, var(--paid-primary-color, #1d2939));
+  background: transparent;
+  padding: var(--paid-cell-padding, 16px 24px);
+  border-bottom: 1px solid #f1f1f1;
 }
 .paid-invoice-table tr:last-child td {
   border-bottom: none;
 }
 .paid-invoice-table tr:hover td {
-  background: var(--paid-row-hover-bg, #f3f4f6);
+  background: var(--paid-table-hover-color, #f3f4f6);
 }
 .paid-invoice-table th,
 .paid-invoice-table td {
@@ -103,76 +104,85 @@
   font-weight: 500;
   text-transform: capitalize;
   border: 1px solid #E5E6E8;
-  background-color: white;
-  color: #374151;
+  background-color: var(--paid-button-bg-color, white);
+  color: var(--paid-primary-color, #374151);
 }
 
 .paid-invoice-status-paid {
-  background-color: white;
-  color: #374151;
+  background-color: var(--paid-button-bg-color, white);
+  color: var(--paid-primary-color, #374151);
   border: 1px solid #E5E6E8;
 }
 
 .paid-invoice-status-pending {
-  background-color: white;
-  color: #374151;
+  background-color: var(--paid-button-bg-color, white);
+  color: var(--paid-primary-color, #374151);
   border: 1px solid #E5E6E8;
 }
 
 .paid-invoice-status-unpaid {
-  background-color: white;
-  color: #374151;
+  background-color: var(--paid-button-bg-color, white);
+  color: var(--paid-primary-color, #374151);
   border: 1px solid #E5E6E8;
 }
 
 /* Action button */
 .paid-invoice-action-btn {
-  background: none;
-  border: none;
+  background: var(--paid-button-bg-color, #ffffff) !important;
+  border: 1px solid #E5E7EB;
   cursor: pointer;
   padding: 8px;
   border-radius: 6px;
-  color: #6b7280;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--paid-primary-color, #374151) !important;
+  transition: all 0.15s ease, filter 0.15s ease;
   transform: translateY(0);
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  outline: none !important;
+  user-select: none;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  box-shadow: none !important;
 }
 
-.paid-invoice-action-btn:hover {
-  background-color: #f3f4f6;
-  color: #374151;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.paid-invoice-action-btn:hover:not(:disabled) {
+  background-color: var(--paid-button-bg-color, #ffffff) !important;
+  color: var(--paid-primary-color, #374151) !important;
+  filter: brightness(0.9) !important;
+  transform: translateY(-1px) !important;
 }
 
-.paid-invoice-action-btn:active {
-  transform: translateY(-1px) scale(0.95);
-  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+.paid-invoice-action-btn:active:not(:disabled) {
+  background-color: var(--paid-button-bg-color, #ffffff) !important;
+  color: var(--paid-primary-color, #374151) !important;
+  filter: brightness(0.8) !important;
+  transform: translateY(0px) !important;
+}
+
+.paid-invoice-action-btn:focus:not(:disabled) {
+  background-color: var(--paid-button-bg-color, #ffffff) !important;
+  color: var(--paid-primary-color, #374151) !important;
+  filter: brightness(0.9) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .paid-invoice-action-btn:disabled {
+  background-color: var(--paid-button-bg-color, #f9fafb) !important;
+  color: #9CA3AF !important;
   opacity: 0.6;
   cursor: not-allowed;
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.paid-invoice-action-btn:disabled:hover {
-  background-color: transparent;
-  color: #6b7280;
-  transform: translateY(0);
-  box-shadow: none;
 }
 
 /* Empty state */
 .paid-invoice-empty {
   text-align: center;
-  color: var(--paid-empty-color, #98a2b3);
+  color: var(--paid-secondary-color, #98a2b3);
   padding: 40px 0;
-  font-size: 1rem;
+  font-size: var(--paid-paragraph-font-size, 1rem);
 }
 
 /* Loading and error states */
@@ -192,12 +202,17 @@
 @media (max-width: 768px) {
   .paid-invoice-table th,
   .paid-invoice-table td {
-    padding: 12px 16px;
-    font-size: 0.8rem;
+    padding: var(--paid-cell-padding, 12px 16px);
+    font-size: var(--paid-paragraph-font-size, 0.8rem);
   }
   
   .paid-invoice-table {
     min-width: 600px;
+  }
+  
+  .paid-invoice-modal-content {
+    width: 95vw;
+    height: 95vh;
   }
 }
 
@@ -207,26 +222,24 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease-out;
+  padding: 20px;
 }
 
 .paid-invoice-modal-content {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 90vw;
   height: 90vh;
   max-width: 1200px;
   max-height: 800px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .paid-invoice-modal-header {
@@ -295,11 +308,8 @@
 
 .paid-invoice-modal-body {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f9fa;
-  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 12px 12px;
 }
 
 .paid-invoice-modal-body iframe {
@@ -313,9 +323,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: #6b7280;
-  gap: 8px;
+  height: 100%;
+  font-size: var(--paid-paragraph-font-size, 1rem);
+  color: var(--paid-secondary-color, #6b7280);
 }
 
 .paid-invoice-modal-loading::after {
