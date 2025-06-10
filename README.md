@@ -1,14 +1,14 @@
 # Paid Next.js Client SDK
  
-Easily embed Paid.ai components in your Next.js app to display payments, invoices, and activity logs for specific accounts.
+Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, and activity logs for specific accounts.
 
 ---
 
 ## Features
 
-- **PaidContainer**: A universal container component with tabbed interface for all data views
-- **Individual Components**: Standalone components for payments, invoices, and activity logs
-- **Universal Styling**: Consistent styling system across all components
+- **PaidContainer**: A universal container block with tabbed interface for all data views
+- **Individual Blocks**: Standalone blocks for payments, invoices, and activity logs
+- **Universal Styling**: Consistent styling system across all blocks
 - **Plug-and-play**: Designed for Next.js 13+ (App Router)
 - **Fully Responsive**: Works seamlessly across all device sizes
 
@@ -24,11 +24,11 @@ yarn add @agentpaid/paid-nextjs-client
 
 ---
 
-## Components
+## Blocks
 
 ### PaidContainer (Recommended)
 
-The `PaidContainer` is an all-in-one tabbed interface that displays payments, invoices, and activity logs in a single component. This is the easiest way to integrate all Paid.ai data views.
+The `PaidContainer` is an all-in-one tabbed interface that displays payments, invoices, and activity logs in a single block. This is the easiest way to integrate all Paid.ai data views.
 
 ```tsx
 import { PaidContainer } from '@agentpaid/paid-nextjs-client';
@@ -44,9 +44,9 @@ import { PaidContainer } from '@agentpaid/paid-nextjs-client';
 />
 ```
 
-### Individual Components
+### Individual Blocks
 
-For more granular control, you can use individual components:
+For more granular control, you can use individual blocks:
 
 ```tsx
 import { 
@@ -166,7 +166,7 @@ export default function CustomerDashboard() {
 
 ## Styling System
 
-The Paid.ai components use a simplified, universal styling system. All components accept a `paidStyle` prop with the following properties:
+The Paid.ai blocks use a simplified, universal styling system. All blocks accept a `paidStyle` prop with the following properties:
 
 ### Universal Style Properties
 
@@ -186,9 +186,9 @@ The Paid.ai components use a simplified, universal styling system. All component
 
 ### Styling Inheritance
 
-- **PaidContainer**: Styles applied here automatically inherit to all child components
-- **Individual Components**: Can override inherited styles or define their own when used standalone
-- **Flexible**: Mix and match - style globally via PaidContainer or individually per component
+- **PaidContainer**: Styles applied here automatically inherit to all child blocks
+- **Individual Blocks**: Can override inherited styles or define their own when used standalone
+- **Flexible**: Mix and match - style globally via PaidContainer or individually per block
 
 ### Example: Dark Theme
 
@@ -211,7 +211,7 @@ The Paid.ai components use a simplified, universal styling system. All component
 />
 ```
 
-### Example: Individual Component Styling
+### Example: Individual Block Styling
 
 ```tsx
 <PaidPaymentsTable 
@@ -235,7 +235,7 @@ The Paid.ai components use a simplified, universal styling system. All component
 | `accountExternalId` | `string` | ✅ | Customer external ID |
 | `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
 
-### Individual Components
+### Individual Blocks
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
