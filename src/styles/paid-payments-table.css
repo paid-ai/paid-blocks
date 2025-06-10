@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-/* Activity Log Table Styles */
-.paid-activity-log-container {
+/* Payments Table Styles */
+.paid-payment-container {
     position: relative;
     min-width: 0;
     font-family: var(--paid-font-family, 'Roboto');
@@ -11,7 +11,7 @@
     box-sizing: border-box;
 }
 
-.paid-activity-log-table-wrapper {
+.paid-payment-table-wrapper {
     position: relative;
     background: var(--paid-table-background-color, #ffffff);
     border: 1px solid #e5e7eb;
@@ -24,11 +24,11 @@
     min-width: 0;
 }
 
-.paid-activity-log-table-wrapper:active {
+.paid-payment-table-wrapper:active {
     box-shadow: 0 4px 24px 0 rgba(16, 24, 40, 0.16);
 }
 
-.paid-activity-log-header {
+.paid-payment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,7 +39,7 @@
     font-family: var(--paid-font-family, 'Roboto');
 }
 
-.paid-activity-log-title {
+.paid-payment-title {
     margin: 0;
     font-size: var(--paid-h3-font-size, 1.1rem);
     font-weight: 600;
@@ -47,7 +47,7 @@
     font-family: var(--paid-font-family, 'Roboto');
 }
 
-.paid-activity-log-table {
+.paid-payment-table {
     width: 100%;
     min-width: 0;
     table-layout: fixed;
@@ -60,8 +60,8 @@
     box-sizing: border-box;
 }
 
-.paid-activity-log-table th,
-.paid-activity-log-table td {
+.paid-payment-table th,
+.paid-payment-table td {
     padding: var(--paid-cell-padding, 8px 8px);
     font-size: var(--paid-paragraph-font-size, 0.95rem);
     white-space: normal;
@@ -70,7 +70,7 @@
     text-overflow: ellipsis;
 }
 
-.paid-activity-log-table th {
+.paid-payment-table th {
     font-size: var(--paid-paragraph-font-size, 1rem);
     font-weight: 500;
     color: var(--paid-table-header-color, var(--paid-secondary-color, #667085));
@@ -80,7 +80,7 @@
     border-bottom: 1px solid #e5e7eb;
 }
 
-.paid-activity-log-table td {
+.paid-payment-table td {
     font-size: var(--paid-paragraph-font-size, 0.97rem);
     font-weight: normal;
     color: var(--paid-table-cell-color, var(--paid-primary-color, #1d2939));
@@ -90,21 +90,90 @@
     vertical-align: middle;
 }
 
-.paid-activity-log-table tr:last-child td {
+.paid-payment-table tr:last-child td {
     border-bottom: none;
 }
 
-.paid-activity-log-table tbody tr:hover td {
+.paid-payment-table tbody tr:hover td {
     background: var(--paid-table-hover-color, #f3f4f6);
 }
 
-.paid-activity-log-table th,
-.paid-activity-log-table td {
+.paid-payment-table th,
+.paid-payment-table td {
     white-space: nowrap;
 }
 
+.paid-payment-amount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.paid-payment-amount .amount-number {
+    font-size: inherit;
+    color: inherit;
+}
+
+/* Status Badges */
+.paid-payment-status {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 6px;
+    padding: 2px 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    border: 1px solid #E5E6E8;
+    background-color: var(--paid-button-bg-color, white);
+    color: var(--paid-primary-color, #374151);
+}
+
+.paid-payment-status-paid {
+    background-color: var(--paid-button-bg-color, white);
+    color: var(--paid-primary-color, #374151);
+    border: 1px solid #E5E6E8;
+}
+
+.paid-payment-status-pending {
+    background-color: var(--paid-button-bg-color, white);
+    color: var(--paid-primary-color, #374151);
+    border: 1px solid #E5E6E8;
+}
+
+.paid-payment-status-unpaid {
+    background-color: var(--paid-button-bg-color, white);
+    color: var(--paid-primary-color, #374151);
+    border: 1px solid #E5E6E8;
+}
+
+/* Action Button */
+.paid-payment-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: var(--paid-secondary-color, #6b7280);
+    transition: all 0.2s;
+}
+
+.paid-payment-action-btn:hover {
+    background-color: #f3f4f6;
+    color: var(--paid-hover-color, var(--paid-primary-color, #374151));
+}
+
+.paid-payment-action-btn:active {
+    color: var(--paid-pressed-color, var(--paid-primary-color, #374151));
+}
+
+.paid-payment-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Empty State */
-.paid-activity-log-empty {
+.paid-payment-empty {
     text-align: center;
     color: var(--paid-secondary-color, #98a2b3);
     padding: 40px 0;
@@ -113,42 +182,13 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .paid-activity-log-table th,
-    .paid-activity-log-table td {
+    .paid-payment-table th,
+    .paid-payment-table td {
         padding: var(--paid-cell-padding, 12px 16px);
         font-size: var(--paid-paragraph-font-size, 0.8rem);
     }
     
-    .paid-activity-log-table {
+    .paid-payment-table {
         min-width: 600px;
     }
-}
-
-/* Resize handles */
-.paid-activity-log-resize-handle {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  z-index: 2;
-}
-.paid-activity-log-resize-handle-nw { top: 0; left: 0; cursor: nwse-resize; }
-.paid-activity-log-resize-handle-ne { top: 0; right: 0; cursor: nesw-resize; }
-.paid-activity-log-resize-handle-sw { bottom: 0; left: 0; cursor: nesw-resize; }
-.paid-activity-log-resize-handle-se { bottom: 0; right: 0; cursor: nwse-resize; }
-.paid-activity-log-resize-handle-n { top: 0; left: 16px; right: 16px; height: 8px; cursor: ns-resize; }
-.paid-activity-log-resize-handle-s { bottom: 0; left: 16px; right: 16px; height: 8px; cursor: ns-resize; }
-.paid-activity-log-resize-handle-w { left: 0; top: 16px; bottom: 16px; width: 8px; cursor: ew-resize; }
-.paid-activity-log-resize-handle-e { right: 0; top: 16px; bottom: 16px; width: 8px; cursor: ew-resize; }
-
-.paid-activity-log-resize-dot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 2px;
-  border: 2px solid #cbd5e1;
-}
-.paid-activity-log-resize-dot-nw { top: 2px; left: 2px; }
-.paid-activity-log-resize-dot-ne { top: 2px; right: 2px; }
-.paid-activity-log-resize-dot-sw { bottom: 2px; left: 2px; }
-.paid-activity-log-resize-dot-se { bottom: 2px; right: 2px; } 
+} 

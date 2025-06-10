@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useIsInContainer } from './PaidContainer';
 import { cachedFetch, getCacheKey, CACHE_TTL } from '../utils/cache';
 import { Pagination } from './ui/Pagination';
-import '../styles/activity-log-table.css';
+import '../styles/paid-payments-table.css';
 
 interface PaidStyleProperties {
     // Global - Font
@@ -31,41 +31,29 @@ interface PaidStyleProperties {
     buttonBgColor?: string;
 }
 
-interface UsageSummary {
+interface Payment {
     id: string;
-    updatedAt: string;
-    createdAt: string;
-    eventName: string;
-    eventsQuantity: number;
-    startDate: string;
-    endDate: string;
-    subtotal: number;
-    nextBillingDate: string;
-    accountId: string;
-    orderId: string;
-    orderLineId: string;
-    orderLineAttributeId: string;
-    invoiceId: string | null;
-    invoiceLineId: string | null;
-    currency?: string;
+    paymentType: string;
+    paymentDate: string;
+    paymentStatus: string;
+    amount: number;
+    currency: string;
 }
 
-interface UsageApiResponse {
-    data: {
-        usageSummary: UsageSummary[];
-    };
+interface PaymentApiResponse {
+    data: Payment[];
 }
 
-interface PaidActivityLogProps {
+interface PaidPaymentsTableProps {
     accountExternalId: string;
     paidStyle?: PaidStyleProperties;
 }
 
-export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ 
+export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({ 
     accountExternalId, 
     paidStyle = {}
 }) => {
-    const [usageSummaries, setUsageSummaries] = useState<UsageSummary[]>([]);
+    const [payments, setPayments] = useState<Payment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -73,10 +61,10 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
     const isInContainer = useIsInContainer();
 
     // Calculate pagination
-    const totalPages = Math.ceil(usageSummaries.length / itemsPerPage);
+    const totalPages = Math.ceil(payments.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentUsageSummaries = usageSummaries.slice(startIndex, endIndex);
+    const currentPayments = payments.slice(startIndex, endIndex);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -84,8 +72,6 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
 
     // Convert paidStyle entries into CSS custom properties
     const cssVariables: React.CSSProperties = Object.entries(paidStyle).reduce((vars, [key, value]) => {
-        // Only set CSS variables if they are explicitly provided
-        // This allows inheritance from parent PaidContainer
         if (value !== undefined && value !== null && value !== '') {
             // Map simplified properties to CSS custom properties
             const propertyMap: Record<string, string> = {
@@ -112,8 +98,8 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
         return vars;
     }, {} as React.CSSProperties);
 
-    const formatCurrency = (amount: number, currency?: string) => {
-        const symbol = getCurrencySymbol(currency || 'USD');
+    const formatCurrency = (amount: number, currency: string) => {
+        const symbol = getCurrencySymbol(currency);
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
@@ -135,51 +121,70 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
         }
     };
 
-    const formatEventName = (eventName: string) => {
-        return eventName
-            .split("_")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-    };
-
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
+            day: '2-digit',
             month: 'short',
-            day: 'numeric'
+            year: 'numeric'
         });
     };
 
+    const getStatusBadge = (status: string) => {
+        // Handle undefined/null status
+        if (!status) {
+            return <span className="paid-payment-status">Unknown</span>;
+        }
+        
+        const statusClass = `paid-payment-status paid-payment-status-${status.toLowerCase()}`;
+        const displayStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+        return <span className={statusClass}>{displayStatus}</span>;
+    };
+
     useEffect(() => {
-        const fetchUsageData = async () => {
+        const fetchPaymentData = async () => {
             try {
                 setLoading(true);
+                console.log('PaidPaymentsTable: Fetching payment data for', accountExternalId);
                 
-                // Use cached fetch for usage data
-                const cacheKey = getCacheKey.usage(accountExternalId);
-                const data = await cachedFetch<UsageApiResponse>(
-                    `/api/usage/${accountExternalId}`,
+                // Use cached fetch for payment data
+                const cacheKey = getCacheKey.payments(accountExternalId);
+                console.log('PaidPaymentsTable: Using cache key', cacheKey);
+                const data = await cachedFetch<PaymentApiResponse>(
+                    `/api/payments/${accountExternalId}`,
                     cacheKey,
                     CACHE_TTL.DATA
                 );
                 
-                const mappedUsageSummaries = (data.data.usageSummary || []).map((summary: any) => ({
-                    ...summary,
-                    accountId: summary.customerId,
-                }));
-                setUsageSummaries(mappedUsageSummaries);
+                console.log('PaidPaymentsTable: Received data', data);
+                setPayments(data.data || []);
             } catch (err) {
+                console.error('PaidPaymentsTable: Error fetching data', err);
                 setError(err instanceof Error ? err.message : 'An error occurred');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchUsageData();
+        fetchPaymentData();
+
+        // Listen for cache refresh events
+        const handleCacheRefresh = (event: CustomEvent) => {
+            console.log('PaidPaymentsTable: Cache refresh event received', event.detail);
+            if (event.detail?.accountId === accountExternalId || event.detail?.type === 'all') {
+                console.log('PaidPaymentsTable: Refetching data due to cache refresh');
+                fetchPaymentData();
+            }
+        };
+
+        window.addEventListener('cache-refresh', handleCacheRefresh as EventListener);
+
+        return () => {
+            window.removeEventListener('cache-refresh', handleCacheRefresh as EventListener);
+        };
     }, [accountExternalId]);
 
     if (loading) {
-        return <div>Loading usage data...</div>;
+        return <div>Loading payment data...</div>;
     }
 
     if (error) {
@@ -187,39 +192,47 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
     }
 
     return (
-        <div className="paid-activity-log-container" style={{ position: 'relative', minWidth: 0, ...cssVariables }}>
-            <div className="paid-activity-log-table-wrapper" style={{ position: 'relative', width: '100%', height: 'auto', left: undefined, top: undefined, boxShadow: undefined, cursor: undefined }}>
+        <div className="paid-payment-container" style={{ position: 'relative', minWidth: 0, ...cssVariables }}>
+            <div className="paid-payment-table-wrapper" style={{ position: 'relative', width: '100%', height: 'auto', left: undefined, top: undefined, boxShadow: undefined, cursor: undefined }}>
                 {!isInContainer && (
-                    <div className="paid-activity-log-header">
-                        <h3 className="paid-activity-log-title">Activity Log</h3>
+                    <div className="paid-payment-header">
+                        <h3 className="paid-payment-title">Payments</h3>
                     </div>
                 )}
                 <div style={{ background: '#fff', overflow: 'auto', width: '100%', boxSizing: 'border-box' }}>
-                    <table className="paid-activity-log-table" style={{ width: '100%', maxWidth: '100%', tableLayout: 'fixed' }}>
+                    <table className="paid-payment-table" style={{ width: '100%', maxWidth: '100%', tableLayout: 'fixed' }}>
                         <thead>
                             <tr>
-                                <th>Event</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th style={{ textAlign: 'center' }}>Current Usage</th>
-                                <th style={{ textAlign: 'center' }}>Total</th>
+                                <th>Payment Number</th>
+                                <th>Payment type</th>
+                                <th>Due date</th>
+                                <th>Status</th>
+                                <th style={{ textAlign: 'center' }}>Amount</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {currentUsageSummaries.length === 0 ? (
+                            {currentPayments.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="paid-activity-log-empty">
-                                        No usage data found
+                                    <td colSpan={5} className="paid-payment-empty">
+                                        No payments found
                                     </td>
                                 </tr>
                             ) : (
-                                currentUsageSummaries.map((summary) => (
-                                    <tr key={summary.id}>
-                                        <td style={{ fontWeight: 500 }}>{formatEventName(summary.eventName)}</td>
-                                        <td>{formatDate(summary.startDate)}</td>
-                                        <td>{formatDate(summary.endDate)}</td>
-                                        <td style={{ textAlign: 'center' }}>{summary.eventsQuantity}</td>
-                                        <td style={{ textAlign: 'center', fontWeight: 500 }}>{formatCurrency(summary.subtotal, summary.currency)}</td>
+                                currentPayments.map((payment) => (
+                                    <tr key={payment.id}>
+                                        <td style={{ fontWeight: 500 }}>
+                                            <div className="paid-payment-number">
+                                                <span>PAY-1</span>
+                                            </div>
+                                        </td>
+                                        <td>{payment.paymentType}</td>
+                                        <td>{formatDate(payment.paymentDate)}</td>
+                                        <td>{getStatusBadge(payment.paymentStatus)}</td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <div className="paid-payment-amount">
+                                                <span className="amount-number">{formatCurrency(payment.amount, payment.currency)}</span>
+                                            </div>
+                                        </td>
                                     </tr>
                                 ))
                             )}
@@ -236,4 +249,6 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
             </div>
         </div>
     );
-}; 
+};
+
+export default PaidPaymentsTable;

@@ -1,6 +1,6 @@
 {
   "name": "@agentpaid/paid-nextjs-client",
-  "version": "0.2.1",
+  "version": "0.3.0-test.2",
   "description": "Official NextJS Component SDK for the Paid.ai APIs.",
   "homepage": "https://github.com/AgentPaid/paid-nextjs-client#readme",
   "bugs": {
@@ -27,9 +27,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.1.0",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
+    "lucide-react": "^0.513.0",
+    "next": "^14.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-pdf": "^9.2.1",
+    "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^8.56.0",
