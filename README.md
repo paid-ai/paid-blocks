@@ -31,10 +31,34 @@ yarn add @agentpaid/paid-nextjs-client
 The `PaidContainer` is an all-in-one tabbed interface that displays payments, invoices, and activity logs in a single block. This is the easiest way to integrate all Paid.ai data views.
 
 ```tsx
-import { PaidContainer } from '@agentpaid/paid-nextjs-client';
+import { 
+  PaidContainer, 
+  PaidActivityLog, 
+  PaidInvoiceTable, 
+  PaidPaymentsTable 
+} from '@agentpaid/paid-nextjs-client';
 
 <PaidContainer 
-  accountExternalId="customer_123"
+  title="Customer Overview"
+  description="Here's a breakdown of recent activity for your customer."
+  defaultActiveTab="payments"
+  tabs={[
+    {
+      id: 'payments',
+      label: 'Payments',
+      component: <PaidPaymentsTable accountExternalId="customer_123" />
+    },
+    {
+      id: 'invoices', 
+      label: 'Invoices',
+      component: <PaidInvoiceTable accountExternalId="customer_123" />
+    },
+    {
+      id: 'activity-log',
+      label: 'Activity Log', 
+      component: <PaidActivityLog accountExternalId="customer_123" />
+    }
+  ]}
   paidStyle={{
     fontFamily: 'Inter',
     primaryColor: '#1f2937',
@@ -113,12 +137,29 @@ import { handlePaidUsage } from '@agentpaid/paid-nextjs-client';
 export const GET = handlePaidUsage(process.env.PAID_API_KEY!);
 ```
 
+**4. Invoice PDF API Route**
+```bash
+mkdir -p "src/app/api/invoice-pdf/[invoiceId]" && touch "src/app/api/invoice-pdf/[invoiceId]/route.ts"
+```
+
+Add to `src/app/api/invoice-pdf/[invoiceId]/route.ts`:
+```ts
+import { handlePaidInvoicePdf } from '@agentpaid/paid-nextjs-client';
+
+export const GET = handlePaidInvoicePdf(process.env.PAID_API_KEY!);
+```
+
 ---
 
 ## Complete Example
 
 ```tsx
-import { PaidContainer } from '@agentpaid/paid-nextjs-client';
+import { 
+  PaidContainer,
+  PaidActivityLog,
+  PaidInvoiceTable,
+  PaidPaymentsTable
+} from '@agentpaid/paid-nextjs-client';
 
 export default function CustomerDashboard() {
   return (
@@ -131,7 +172,26 @@ export default function CustomerDashboard() {
       </section>
 
       <PaidContainer 
-        accountExternalId="customer_123"
+        title="Customer Overview"
+        description="Complete breakdown of payments, invoices, and activity."
+        defaultActiveTab="payments"
+        tabs={[
+          {
+            id: 'payments',
+            label: 'Payments',
+            component: <PaidPaymentsTable accountExternalId="customer_123" />
+          },
+          {
+            id: 'invoices',
+            label: 'Invoices', 
+            component: <PaidInvoiceTable accountExternalId="customer_123" />
+          },
+          {
+            id: 'activity-log',
+            label: 'Activity Log',
+            component: <PaidActivityLog accountExternalId="customer_123" />
+          }
+        ]}
         paidStyle={{
           // Global styling
           fontFamily: 'Inter, sans-serif',
@@ -194,7 +254,16 @@ The Paid.ai blocks use a simplified, universal styling system. All blocks accept
 
 ```tsx
 <PaidContainer 
-  accountExternalId="customer_123"
+  title="Customer Overview"
+  description="Dark theme example"
+  defaultActiveTab="payments"
+  tabs={[
+    {
+      id: 'payments',
+      label: 'Payments',
+      component: <PaidPaymentsTable accountExternalId="customer_123" />
+    }
+  ]}
   paidStyle={{
     fontFamily: 'Inter',
     primaryColor: '#f9fafb',
@@ -232,7 +301,10 @@ The Paid.ai blocks use a simplified, universal styling system. All blocks accept
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `accountExternalId` | `string` | ✅ | Customer external ID |
+| `title` | `string` | ❌ | Container title |
+| `description` | `string` | ❌ | Container description |
+| `defaultActiveTab` | `string` | ❌ | Default active tab ID |
+| `tabs` | `Tab[]` | ✅ | Array of tab configurations |
 | `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
 
 ### Individual Blocks
