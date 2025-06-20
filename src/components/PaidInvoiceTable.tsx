@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useIsInContainer } from './PaidContainer';
-import { cachedFetch, getCacheKey, CACHE_TTL, dataCache } from '../utils/cache';
+import { getCacheKey, CACHE_TTL, dataCache } from '../utils/cache';
 import { Pagination } from './ui/Pagination';
+import { fetchPaidData } from '../utils/apiClient';
 import '../styles/paid-invoice-table.css';
 
 interface PaidStyleProperties {
@@ -51,12 +52,12 @@ interface InvoiceApiResponse {
 }
 
 interface PaidInvoiceTableProps {
-    accountExternalId: string;
+    customerExternalId: string;
     paidStyle?: PaidStyleProperties;
 }
 
 export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({ 
-    accountExternalId, 
+    customerExternalId, 
     paidStyle = {}
 }) => {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -159,8 +160,11 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
                 return;
             }
             
-            // Fetch PDF if not cached
-            const response = await fetch(`/api/invoice-pdf/${invoice.id}`);
+            // Fetch PDF if not cached using new API client
+            const response = await fetchPaidData({
+                paidEndpoint: 'invoice-pdf',
+                invoiceId: invoice.id
+            });
             
             if (!response.ok) {
                 throw new Error('Failed to fetch PDF');
@@ -212,14 +216,17 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
             try {
                 setLoading(true);
                 
-                // Use cached fetch for invoice data
-                const cacheKey = getCacheKey.invoices(accountExternalId);
-                const data = await cachedFetch<InvoiceApiResponse>(
-                    `/api/invoices/${accountExternalId}`,
-                    cacheKey,
-                    CACHE_TTL.DATA
-                );
+                // Use new API client for invoice data
+                const response = await fetchPaidData({
+                    paidEndpoint: 'invoices',
+                    customerExternalId
+                });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json() as InvoiceApiResponse;
                 setInvoices(data.data || []);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred');
@@ -229,7 +236,20 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
         };
 
         fetchInvoiceData();
-    }, [accountExternalId]);
+
+        // Listen for cache refresh events
+        const handleCacheRefresh = (event: CustomEvent) => {
+            if (event.detail?.customerId === customerExternalId || event.detail?.type === 'all') {
+                fetchInvoiceData();
+            }
+        };
+
+        window.addEventListener('cache-refresh', handleCacheRefresh as EventListener);
+
+        return () => {
+            window.removeEventListener('cache-refresh', handleCacheRefresh as EventListener);
+        };
+    }, [customerExternalId]);
 
     if (loading) {
         return <div>Loading invoice data...</div>;

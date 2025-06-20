@@ -1,6 +1,15 @@
 # Paid Next.js Client SDK
  
-Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, and activity logs for specific accounts.
+Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, and activity logs for specific customers.
+
+## Quick Setup
+
+1. **Install**: `npm install @agentpaid/paid-nextjs-client`
+2. **Add API key**: Set `PAID_API_KEY` in your `.env.local`
+3. **Create one API route**: `src/app/api/[paidEndpoint]/[...params]/route.ts`
+4. **Use components**: Import and use `PaidContainer` or individual blocks
+
+That's it! No complex configuration needed.
 
 ---
 
@@ -11,6 +20,15 @@ Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, a
 - **Universal Styling**: Consistent styling system across all blocks
 - **Plug-and-play**: Designed for Next.js 13+ (App Router)
 - **Fully Responsive**: Works seamlessly across all device sizes
+- **Single API Route**: One unified endpoint handles all data requests - minimal setup required
+- **Environment Variables**: Secure API key management through `.env.local`
+- **Tabbed Interface**: PaidContainer provides easy navigation between data views
+- **Pagination**: All tables include built-in pagination for large datasets
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Loading States**: Elegant loading indicators while data fetches
+- **Error Handling**: Graceful error messages for failed requests
+- **Caching**: Built-in request caching for improved performance
+- **PDF Preview**: Invoice table includes PDF preview and download functionality
 
 ---
 
@@ -46,17 +64,17 @@ import {
     {
       id: 'payments',
       label: 'Payments',
-      component: <PaidPaymentsTable accountExternalId="customer_123" />
+      component: <PaidPaymentsTable customerExternalId="customer_123" />
     },
     {
       id: 'invoices', 
       label: 'Invoices',
-      component: <PaidInvoiceTable accountExternalId="customer_123" />
+      component: <PaidInvoiceTable customerExternalId="customer_123" />
     },
     {
       id: 'activity-log',
       label: 'Activity Log', 
-      component: <PaidActivityLog accountExternalId="customer_123" />
+      component: <PaidActivityLog customerExternalId="customer_123" />
     }
   ]}
   paidStyle={{
@@ -80,73 +98,52 @@ import {
 } from '@agentpaid/paid-nextjs-client';
 
 // Payments only
-<PaidPaymentsTable accountExternalId="customer_123" />
+<PaidPaymentsTable customerExternalId="customer_123" />
 
 // Invoices only  
-<PaidInvoiceTable accountExternalId="customer_123" />
+<PaidInvoiceTable customerExternalId="customer_123" />
 
 // Activity log only
-<PaidActivityLog accountExternalId="customer_123" />
+<PaidActivityLog customerExternalId="customer_123" />
 ```
 
 ---
 
 ## API Routes Setup
 
-You need to create API routes for each data type. **First, add your Paid.ai API key to `.env.local`:**
+You need to create a single API route to handle all Paid.ai endpoints. **First, add your Paid.ai API key to `.env.local`:**
 
 ```env
 PAID_API_KEY=your_paid_ai_api_key_here
 ```
 
-### Required API Routes
+### Single Unified API Route
 
-**1. Payments API Route**
+Create one API route that handles all four endpoints:
+
 ```bash
-mkdir -p "src/app/api/payments/[accountExternalId]" && touch "src/app/api/payments/[accountExternalId]/route.ts"
+mkdir -p "src/app/api/[paidEndpoint]/[...params]" && touch "src/app/api/[paidEndpoint]/[...params]/route.ts"
 ```
 
-Add to `src/app/api/payments/[accountExternalId]/route.ts`:
+Add to `src/app/api/[paidEndpoint]/[...params]/route.ts`:
 ```ts
-import { handlePaidPayments } from '@agentpaid/paid-nextjs-client';
+import { handleBlocks } from '@agentpaid/paid-nextjs-client';
 
-export const GET = handlePaidPayments(process.env.PAID_API_KEY!);
+export const GET = handleBlocks();
 ```
 
-**2. Invoices API Route**
-```bash
-mkdir -p "src/app/api/invoices/[accountExternalId]" && touch "src/app/api/invoices/[accountExternalId]/route.ts"
-```
+That's it! This single route automatically handles all four endpoints:
+- `/api/invoices/[customerExternalId]` - for invoices
+- `/api/payments/[customerExternalId]` - for payments  
+- `/api/usage/[customerExternalId]` - for usage/activity log
+- `/api/invoice-pdf/[invoiceId]` - for invoice PDFs
 
-Add to `src/app/api/invoices/[accountExternalId]/route.ts`:
+### Custom API Base URL
+
+If you need to use a custom API base URL:
+
 ```ts
-import { handlePaidInvoices } from '@agentpaid/paid-nextjs-client';
-
-export const GET = handlePaidInvoices(process.env.PAID_API_KEY!);
-```
-
-**3. Activity Log API Route**
-```bash
-mkdir -p "src/app/api/usage/[accountExternalId]" && touch "src/app/api/usage/[accountExternalId]/route.ts"
-```
-
-Add to `src/app/api/usage/[accountExternalId]/route.ts`:
-```ts
-import { handlePaidUsage } from '@agentpaid/paid-nextjs-client';
-
-export const GET = handlePaidUsage(process.env.PAID_API_KEY!);
-```
-
-**4. Invoice PDF API Route**
-```bash
-mkdir -p "src/app/api/invoice-pdf/[invoiceId]" && touch "src/app/api/invoice-pdf/[invoiceId]/route.ts"
-```
-
-Add to `src/app/api/invoice-pdf/[invoiceId]/route.ts`:
-```ts
-import { handlePaidInvoicePdf } from '@agentpaid/paid-nextjs-client';
-
-export const GET = handlePaidInvoicePdf(process.env.PAID_API_KEY!);
+export const GET = handleBlocks('https://your-custom-api.com');
 ```
 
 ---
@@ -168,7 +165,7 @@ export default function CustomerDashboard() {
 
       <section style={{ marginBottom: '2rem' }}>
         <p><strong>Welcome back!</strong></p>
-        <p>Here's a complete overview for account <code>customer_123</code>.</p>
+        <p>Here's a complete overview for customer <code>customer_123</code>.</p>
       </section>
 
       <PaidContainer 
@@ -179,17 +176,17 @@ export default function CustomerDashboard() {
           {
             id: 'payments',
             label: 'Payments',
-            component: <PaidPaymentsTable accountExternalId="customer_123" />
+            component: <PaidPaymentsTable customerExternalId="customer_123" />
           },
           {
             id: 'invoices',
             label: 'Invoices', 
-            component: <PaidInvoiceTable accountExternalId="customer_123" />
+            component: <PaidInvoiceTable customerExternalId="customer_123" />
           },
           {
             id: 'activity-log',
             label: 'Activity Log',
-            component: <PaidActivityLog accountExternalId="customer_123" />
+            component: <PaidActivityLog customerExternalId="customer_123" />
           }
         ]}
         paidStyle={{
@@ -261,7 +258,7 @@ The Paid.ai blocks use a simplified, universal styling system. All blocks accept
     {
       id: 'payments',
       label: 'Payments',
-      component: <PaidPaymentsTable accountExternalId="customer_123" />
+      component: <PaidPaymentsTable customerExternalId="customer_123" />
     }
   ]}
   paidStyle={{
@@ -284,7 +281,7 @@ The Paid.ai blocks use a simplified, universal styling system. All blocks accept
 
 ```tsx
 <PaidPaymentsTable 
-  accountExternalId="customer_123"
+  customerExternalId="customer_123"
   paidStyle={{
     primaryColor: '#dc2626',
     buttonBgColor: '#fef2f2',
@@ -311,17 +308,5 @@ The Paid.ai blocks use a simplified, universal styling system. All blocks accept
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `accountExternalId` | `string` | ✅ | Customer external ID |
+| `customerExternalId` | `string` | ✅ | Customer external ID |
 | `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
-
----
-
-## Features
-
-- **Tabbed Interface**: PaidContainer provides easy navigation between data views
-- **Pagination**: All tables include built-in pagination for large datasets
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
-- **Loading States**: Elegant loading indicators while data fetches
-- **Error Handling**: Graceful error messages for failed requests
-- **Caching**: Built-in request caching for improved performance
-- **PDF Preview**: Invoice table includes PDF preview and download functionality

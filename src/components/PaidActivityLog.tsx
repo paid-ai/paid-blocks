@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useIsInContainer } from './PaidContainer';
-import { cachedFetch, getCacheKey, CACHE_TTL } from '../utils/cache';
 import { Pagination } from './ui/Pagination';
-import '../styles/activity-log-table.css';
+import { fetchPaidData } from '../utils/apiClient';
+import '../styles/paid-activity-log.css';
 
 interface PaidStyleProperties {
     // Global - Font
@@ -57,12 +57,12 @@ interface UsageApiResponse {
 }
 
 interface PaidActivityLogProps {
-    accountExternalId: string;
+    customerExternalId: string;
     paidStyle?: PaidStyleProperties;
 }
 
 export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ 
-    accountExternalId, 
+    customerExternalId, 
     paidStyle = {}
 }) => {
     const [usageSummaries, setUsageSummaries] = useState<UsageSummary[]>([]);
@@ -155,14 +155,17 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
             try {
                 setLoading(true);
                 
-                // Use cached fetch for usage data
-                const cacheKey = getCacheKey.usage(accountExternalId);
-                const data = await cachedFetch<UsageApiResponse>(
-                    `/api/usage/${accountExternalId}`,
-                    cacheKey,
-                    CACHE_TTL.DATA
-                );
+                // Use new API client for usage data
+                const response = await fetchPaidData({
+                    paidEndpoint: 'usage',
+                    customerExternalId
+                });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json() as UsageApiResponse;
                 const mappedUsageSummaries = (data.data.usageSummary || []).map((summary: any) => ({
                     ...summary,
                     accountId: summary.customerId,
@@ -176,7 +179,20 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
         };
 
         fetchUsageData();
-    }, [accountExternalId]);
+
+        // Listen for cache refresh events
+        const handleCacheRefresh = (event: CustomEvent) => {
+            if (event.detail?.customerId === customerExternalId || event.detail?.type === 'all') {
+                fetchUsageData();
+            }
+        };
+
+        window.addEventListener('cache-refresh', handleCacheRefresh as EventListener);
+
+        return () => {
+            window.removeEventListener('cache-refresh', handleCacheRefresh as EventListener);
+        };
+    }, [customerExternalId]);
 
     if (loading) {
         return <div>Loading usage data...</div>;

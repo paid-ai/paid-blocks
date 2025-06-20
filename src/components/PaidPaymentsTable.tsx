@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useIsInContainer } from './PaidContainer';
-import { cachedFetch, getCacheKey, CACHE_TTL } from '../utils/cache';
+import { getCacheKey } from '../utils/cache';
 import { Pagination } from './ui/Pagination';
 import '../styles/paid-payments-table.css';
+import { fetchPaidData } from '../utils/apiClient';
 
 interface PaidStyleProperties {
     // Global - Font
@@ -45,12 +46,12 @@ interface PaymentApiResponse {
 }
 
 interface PaidPaymentsTableProps {
-    accountExternalId: string;
+    customerExternalId: string;
     paidStyle?: PaidStyleProperties;
 }
 
 export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({ 
-    accountExternalId, 
+    customerExternalId, 
     paidStyle = {}
 }) => {
     const [payments, setPayments] = useState<Payment[]>([]);
@@ -144,17 +145,22 @@ export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({
         const fetchPaymentData = async () => {
             try {
                 setLoading(true);
-                console.log('PaidPaymentsTable: Fetching payment data for', accountExternalId);
+                console.log('PaidPaymentsTable: Fetching payment data for', customerExternalId);
                 
                 // Use cached fetch for payment data
-                const cacheKey = getCacheKey.payments(accountExternalId);
+                const cacheKey = getCacheKey.payments(customerExternalId);
                 console.log('PaidPaymentsTable: Using cache key', cacheKey);
-                const data = await cachedFetch<PaymentApiResponse>(
-                    `/api/payments/${accountExternalId}`,
-                    cacheKey,
-                    CACHE_TTL.DATA
-                );
                 
+                const response = await fetchPaidData({
+                    paidEndpoint: 'payments',
+                    customerExternalId
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json() as PaymentApiResponse;
                 console.log('PaidPaymentsTable: Received data', data);
                 setPayments(data.data || []);
             } catch (err) {
@@ -170,7 +176,7 @@ export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({
         // Listen for cache refresh events
         const handleCacheRefresh = (event: CustomEvent) => {
             console.log('PaidPaymentsTable: Cache refresh event received', event.detail);
-            if (event.detail?.accountId === accountExternalId || event.detail?.type === 'all') {
+            if (event.detail?.customerId === customerExternalId || event.detail?.type === 'all') {
                 console.log('PaidPaymentsTable: Refetching data due to cache refresh');
                 fetchPaymentData();
             }
@@ -181,7 +187,7 @@ export const PaidPaymentsTable: React.FC<PaidPaymentsTableProps> = ({
         return () => {
             window.removeEventListener('cache-refresh', handleCacheRefresh as EventListener);
         };
-    }, [accountExternalId]);
+    }, [customerExternalId]);
 
     if (loading) {
         return <div>Loading payment data...</div>;
