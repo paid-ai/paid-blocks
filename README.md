@@ -1,3 +1,12 @@
+<div align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./assets/paid_light.svg" width=600>
+        <source media="(prefers-color-scheme: light)" srcset="./assets/paid_dark.svg" width=600>
+        <img alt="Fallback image description" src="./assets/paid_light.svg" width=600>
+    </picture>
+</div>
+
+
 # Paid.ai Blocks
  
 Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, and activity logs for specific customers.
