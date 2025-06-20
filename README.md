@@ -14,7 +14,7 @@ Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, a
 
 ## Quick Setup
 
-1. **Install**: `npm install @agentpaid/paid-nextjs-client`
+1. **Install**: `npm install @paid-ai/paid-blocks`
 2. **Add API key**: Set `PAID_API_KEY` in your `.env.local`
 3. **Create one API route**: `src/app/api/[paidEndpoint]/[...params]/route.ts`
 4. **Use components**: Import and use `PaidContainer` or individual blocks
@@ -26,9 +26,9 @@ That's it! No complex configuration needed.
 ## Installation
 
 ```bash
-npm install @agentpaid/paid-nextjs-client
+npm install @paid-ai/paid-blocks
 # or
-yarn add @agentpaid/paid-nextjs-client
+yarn add @paid-ai/paid-blocks
 ```
 
 ---
@@ -45,7 +45,7 @@ import {
   PaidActivityLog, 
   PaidInvoiceTable, 
   PaidPaymentsTable 
-} from '@agentpaid/paid-nextjs-client';
+} from '@paid-ai/paid-blocks';
 
 <PaidContainer 
   title="Customer Overview"
@@ -86,7 +86,7 @@ import {
   PaidPaymentsTable, 
   PaidInvoiceTable, 
   PaidActivityLog 
-} from '@agentpaid/paid-nextjs-client';
+} from '@paid-ai/paid-blocks';
 
 // Payments only
 <PaidPaymentsTable customerExternalId="customer_123" />
@@ -118,7 +118,7 @@ mkdir -p "app/api/[paidEndpoint]/[...params]" && touch "app/api/[paidEndpoint]/[
 
 Add to `app/api/[paidEndpoint]/[...params]/route.ts`:
 ```ts
-import { handleBlocks } from '@agentpaid/paid-nextjs-client';
+import { handleBlocks } from '@paid-ai/paid-blocks';
 
 export const GET = handleBlocks();
 ```
@@ -133,7 +133,7 @@ import {
   PaidActivityLog,
   PaidInvoiceTable,
   PaidPaymentsTable
-} from '@agentpaid/paid-nextjs-client';
+} from '@paid-ai/paid-blocks';
 
 export default function CustomerDashboard() {
   return (

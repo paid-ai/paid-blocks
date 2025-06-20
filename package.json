@@ -1,14 +1,14 @@
 {
-  "name": "@agentpaid/paid-nextjs-client",
-  "version": "0.3.0",
+  "name": "@paid-ai/paid-blocks",
+  "version": "0.1.0",
   "description": "Official NextJS Component SDK for the Paid.ai APIs.",
-  "homepage": "https://github.com/AgentPaid/paid-nextjs-client#readme",
+  "homepage": "https://github.com/paid-ai/paid-blocks#readme",
   "bugs": {
-    "url": "https://github.com/AgentPaid/paid-nextjs-client/issues"
+    "url": "https://github.com/paid-ai/paid-blocks/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AgentPaid/paid-nextjs-client.git"
+    "url": "git+https://github.com/paid-ai/paid-blocks.git"
   },
   "license": "ISC",
   "author": "",
