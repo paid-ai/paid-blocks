@@ -5,6 +5,8 @@
         <img alt="Fallback image description" src="./assets/paid_light.svg" width=600>
     </picture>
 </div>
+
+# 
  
 Paid is the all-in-one, drop-in Business Engine for AI Agents that handles your pricing, subscriptions, margins, billing, and renewals with just 5 lines of code. 
 Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, and activity logs for specific customers.
