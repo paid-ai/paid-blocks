@@ -103,10 +103,10 @@ PAID_API_KEY=your_paid_ai_api_key_here
 Create one API route that handles all four endpoints:
 
 ```bash
-mkdir -p "src/app/api/[paidEndpoint]/[...params]" && touch "src/app/api/[paidEndpoint]/[...params]/route.ts"
+mkdir -p "app/api/[paidEndpoint]/[...params]" && touch "app/api/[paidEndpoint]/[...params]/route.ts"
 ```
 
-Add to `src/app/api/[paidEndpoint]/[...params]/route.ts`:
+Add to `app/api/[paidEndpoint]/[...params]/route.ts`:
 ```ts
 import { handleBlocks } from '@agentpaid/paid-nextjs-client';
 
