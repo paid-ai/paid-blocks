@@ -132,20 +132,6 @@ import { handleBlocks } from '@agentpaid/paid-nextjs-client';
 export const GET = handleBlocks();
 ```
 
-That's it! This single route automatically handles all four endpoints:
-- `/api/invoices/[customerExternalId]` - for invoices
-- `/api/payments/[customerExternalId]` - for payments  
-- `/api/usage/[customerExternalId]` - for usage/activity log
-- `/api/invoice-pdf/[invoiceId]` - for invoice PDFs
-
-### Custom API Base URL
-
-If you need to use a custom API base URL:
-
-```ts
-export const GET = handleBlocks('https://your-custom-api.com');
-```
-
 ---
 
 ## Complete Example
@@ -289,24 +275,3 @@ The Paid.ai blocks use a simplified, universal styling system. All blocks accept
   }}
 />
 ```
-
----
-
-## Props
-
-### PaidContainer
-
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | `string` | ❌ | Container title |
-| `description` | `string` | ❌ | Container description |
-| `defaultActiveTab` | `string` | ❌ | Default active tab ID |
-| `tabs` | `Tab[]` | ✅ | Array of tab configurations |
-| `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
-
-### Individual Blocks
-
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `customerExternalId` | `string` | ✅ | Customer external ID |
-| `paidStyle` | `PaidStyleProperties` | ❌ | Styling configuration |
