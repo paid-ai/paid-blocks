@@ -1,4 +1,4 @@
-# Paid Next.js Client SDK
+# Paid.ai Blocks
  
 Easily embed Paid.ai blocks in your Next.js app to display payments, invoices, and activity logs for specific customers.
 
