@@ -13,25 +13,6 @@ That's it! No complex configuration needed.
 
 ---
 
-## Features
-
-- **PaidContainer**: A universal container block with tabbed interface for all data views
-- **Individual Blocks**: Standalone blocks for payments, invoices, and activity logs
-- **Universal Styling**: Consistent styling system across all blocks
-- **Plug-and-play**: Designed for Next.js 13+ (App Router)
-- **Fully Responsive**: Works seamlessly across all device sizes
-- **Single API Route**: One unified endpoint handles all data requests - minimal setup required
-- **Environment Variables**: Secure API key management through `.env.local`
-- **Tabbed Interface**: PaidContainer provides easy navigation between data views
-- **Pagination**: All tables include built-in pagination for large datasets
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
-- **Loading States**: Elegant loading indicators while data fetches
-- **Error Handling**: Graceful error messages for failed requests
-- **Caching**: Built-in request caching for improved performance
-- **PDF Preview**: Invoice table includes PDF preview and download functionality
-
----
-
 ## Installation
 
 ```bash
