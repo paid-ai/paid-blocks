@@ -1,6 +1,6 @@
 {
   "name": "@paid-ai/paid-blocks",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Official NextJS Component SDK for the Paid.ai APIs.",
   "homepage": "https://github.com/paid-ai/paid-blocks#readme",
   "bugs": {
