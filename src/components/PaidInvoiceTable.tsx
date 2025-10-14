@@ -54,11 +54,13 @@ interface InvoiceApiResponse {
 interface PaidInvoiceTableProps {
     customerExternalId: string;
     paidStyle?: PaidStyleProperties;
+    baseUrl?: string;
 }
 
-export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({ 
-    customerExternalId, 
-    paidStyle = {}
+export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
+    customerExternalId,
+    paidStyle = {},
+    baseUrl
 }) => {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
@@ -163,7 +165,8 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
             // Fetch PDF if not cached using new API client
             const response = await fetchPaidData({
                 paidEndpoint: 'invoice-pdf',
-                invoiceId: invoice.id
+                invoiceId: invoice.id,
+                baseUrl
             });
             
             if (!response.ok) {
@@ -219,7 +222,8 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
                 // Use new API client for invoice data
                 const response = await fetchPaidData({
                     paidEndpoint: 'invoices',
-                    customerExternalId
+                    customerExternalId,
+                    baseUrl
                 });
                 
                 if (!response.ok) {

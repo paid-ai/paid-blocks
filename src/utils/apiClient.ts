@@ -6,6 +6,7 @@ interface ApiClientOptions {
   paidEndpoint: PaidEndpoint;
   customerExternalId?: string;
   invoiceId?: string;
+  baseUrl?: string;
 }
 
 class CachedResponse {
@@ -32,17 +33,47 @@ class CachedResponse {
   }
 }
 
-export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId }: ApiClientOptions) {
+export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, baseUrl }: ApiClientOptions) {
   let url: string;
   let cacheKey: string;
   let ttl: number;
-  
+
+  // Determine URL pattern based on whether baseUrl is provided
+  // If baseUrl is provided, assume custom backend with REST API structure
+  // If not, use default Next.js proxy pattern
+  const isCustomBackend = !!baseUrl;
+
   if (paidEndpoint === 'invoice-pdf' && invoiceId) {
-    url = `/api/${paidEndpoint}/${invoiceId}`;
+    if (isCustomBackend) {
+      // Custom backend pattern: {baseUrl}/invoices/{invoiceId}/pdf
+      url = `${baseUrl}/invoices/${invoiceId}/pdf`;
+    } else {
+      // Next.js proxy pattern: /api/invoice-pdf/{invoiceId}
+      url = `/api/${paidEndpoint}/${invoiceId}`;
+    }
     cacheKey = getCacheKey.invoicePdf(invoiceId);
     ttl = CACHE_TTL.PDF;
   } else if (customerExternalId) {
-    url = `/api/${paidEndpoint}/${customerExternalId}`;
+    if (isCustomBackend) {
+      // Custom backend pattern: {baseUrl}/customers/{customerExternalId}/{endpoint}
+      switch (paidEndpoint) {
+        case 'invoices':
+          url = `${baseUrl}/customers/${customerExternalId}/invoices`;
+          break;
+        case 'payments':
+          url = `${baseUrl}/customers/${customerExternalId}/payments`;
+          break;
+        case 'usage':
+          url = `${baseUrl}/customers/${customerExternalId}/usage`;
+          break;
+        default:
+          throw new Error(`Unknown endpoint: ${paidEndpoint}`);
+      }
+    } else {
+      // Next.js proxy pattern: /api/{endpoint}/{customerExternalId}
+      url = `/api/${paidEndpoint}/${customerExternalId}`;
+    }
+
     switch (paidEndpoint) {
       case 'invoices':
         cacheKey = getCacheKey.invoices(customerExternalId);
@@ -66,15 +97,17 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
     return new CachedResponse(cached);
   }
 
-  const response = await fetch(url);
-  
+  // Include credentials for custom backend to send cookies
+  const fetchOptions: RequestInit = isCustomBackend ? { credentials: 'include' } : {};
+  const response = await fetch(url, fetchOptions);
+
   if (!response.ok) {
     throw response;
   }
 
   const data = await response.json();
-  
+
   dataCache.set(cacheKey, data, ttl);
-  
+
   return new CachedResponse(data);
 } 
