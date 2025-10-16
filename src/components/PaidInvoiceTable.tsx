@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useIsInContainer } from './PaidContainer';
 import { getCacheKey, CACHE_TTL, dataCache } from '../utils/cache';
 import { Pagination } from './ui/Pagination';
-import { fetchPaidData } from '../utils/apiClient';
+import { fetchPaidData, PaidBlocksOptions } from '../utils/apiClient';
 import '../styles/paid-invoice-table.css';
 
 interface PaidStyleProperties {
@@ -54,13 +54,13 @@ interface InvoiceApiResponse {
 interface PaidInvoiceTableProps {
     customerExternalId: string;
     paidStyle?: PaidStyleProperties;
-    baseUrl?: string;
+    options?: PaidBlocksOptions;
 }
 
 export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
     customerExternalId,
     paidStyle = {},
-    baseUrl
+    options
 }) => {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
@@ -166,7 +166,7 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
             const response = await fetchPaidData({
                 paidEndpoint: 'invoice-pdf',
                 invoiceId: invoice.id,
-                baseUrl
+                options
             });
             
             if (!response.ok) {
@@ -223,7 +223,7 @@ export const PaidInvoiceTable: React.FC<PaidInvoiceTableProps> = ({
                 const response = await fetchPaidData({
                     paidEndpoint: 'invoices',
                     customerExternalId,
-                    baseUrl
+                    options
                 });
                 
                 if (!response.ok) {

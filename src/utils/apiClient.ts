@@ -2,11 +2,16 @@ import { dataCache, getCacheKey, CACHE_TTL } from './cache';
 
 type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf';
 
+export interface PaidBlocksOptions {
+  baseUrl?: string;
+  headers?: Record<string, string>;
+}
+
 interface ApiClientOptions {
   paidEndpoint: PaidEndpoint;
   customerExternalId?: string;
   invoiceId?: string;
-  baseUrl?: string;
+  options?: PaidBlocksOptions;
 }
 
 class CachedResponse {
@@ -33,7 +38,7 @@ class CachedResponse {
   }
 }
 
-export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, baseUrl }: ApiClientOptions) {
+export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, options }: ApiClientOptions) {
   let url: string;
   let cacheKey: string;
   let ttl: number;
@@ -41,6 +46,7 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
   // Determine URL pattern based on whether baseUrl is provided
   // If baseUrl is provided, assume custom backend with REST API structure
   // If not, use default Next.js proxy pattern
+  const baseUrl = options?.baseUrl;
   const isCustomBackend = !!baseUrl;
 
   if (paidEndpoint === 'invoice-pdf' && invoiceId) {
@@ -97,8 +103,20 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
     return new CachedResponse(cached);
   }
 
-  // Include credentials for custom backend to send cookies
-  const fetchOptions: RequestInit = isCustomBackend ? { credentials: 'include' } : {};
+  // Build fetch options
+  const fetchOptions: RequestInit = {};
+
+  // Only use credentials: 'include' if no custom headers are provided
+  // When custom headers (like authorization) are provided, we don't need cookies
+  if (isCustomBackend && !options?.headers) {
+    fetchOptions.credentials = 'include';
+  }
+
+  // Add custom headers if provided
+  if (options?.headers) {
+    fetchOptions.headers = options.headers;
+  }
+
   const response = await fetch(url, fetchOptions);
 
   if (!response.ok) {
