@@ -356,4 +356,89 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Payment button styles */
+.paid-invoice-pay-btn {
+  background: #4f46e5 !important;
+  color: white !important;
+}
+
+.paid-invoice-pay-btn:hover:not(:disabled) {
+  background: #4338ca !important;
+}
+
+/* Payment modal styles */
+.paid-invoice-payment-modal {
+  max-width: 500px;
+  min-height: auto;
+}
+
+.paid-invoice-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.paid-invoice-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1d2939;
+}
+
+.paid-invoice-modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.paid-invoice-modal-close:hover {
+  background: #f3f4f6;
+  color: #1d2939;
+}
+
+.paid-invoice-payment-summary {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.paid-invoice-payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.paid-invoice-payment-row:first-child {
+  padding-top: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.paid-invoice-payment-amount {
+  font-weight: 600;
+  color: #1d2939;
+  font-size: 1.25rem;
+}
+
+.paid-invoice-payment-form {
+  padding: 0 1.5rem 1.5rem;
 } 
