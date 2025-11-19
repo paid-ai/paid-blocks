@@ -1,4 +1,4 @@
-type PaidEndpoint = 'invoices' | 'payments' | 'invoice-pdf' | 'usage';
+type PaidEndpoint = 'invoices' | 'payments' | 'invoice-pdf' | 'usage' | 'blocks';
 
 interface Params {
   paidEndpoint: string;
@@ -6,18 +6,19 @@ interface Params {
 }
 
 export function handleBlocks(apiBase?: string) {
-  return async function GET(
-    _request: Request,
+  return async function handler(
+    request: Request,
     { params }: { params: Promise<Params> }
   ) {
     let resolvedParams: Params | undefined;
     try {
-      const apiKey = process.env.PAID_API_KEY;
-      
+      // Support both PAID_API_KEY (server-side) and NEXT_PUBLIC_PAID_API_KEY (client-side)
+      const apiKey = process.env.PAID_API_KEY || process.env.NEXT_PUBLIC_PAID_API_KEY;
+
       if (!apiKey) {
         return new Response(
-          JSON.stringify({ error: 'API key not configured. Please set PAID_API_KEY environment variable.' }),
-          { 
+          JSON.stringify({ error: 'API key not configured. Please set PAID_API_KEY or NEXT_PUBLIC_PAID_API_KEY environment variable.' }),
+          {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
           }
@@ -31,20 +32,25 @@ export function handleBlocks(apiBase?: string) {
       resolvedParams = await params;
       const paidEndpoint = resolvedParams.paidEndpoint as PaidEndpoint;
       const routeParams = resolvedParams.params || [];
-      
+
       let customerExternalId: string | undefined;
       let invoiceId: string | undefined;
-      
-      if (paidEndpoint === 'invoice-pdf') {
+      let queryId: string | undefined;
+
+      // Handle AI-generated blocks route: /api/blocks/query/{queryId}
+      if (paidEndpoint === 'blocks' && routeParams[0] === 'query' && routeParams[1]) {
+        queryId = routeParams[1];
+      } else if (paidEndpoint === 'invoice-pdf') {
         invoiceId = routeParams[0];
       } else {
         customerExternalId = routeParams[0];
       }
 
+      // Validate SDK blocks require customerExternalId
       if ((paidEndpoint === 'invoices' || paidEndpoint === 'payments' || paidEndpoint === 'usage') && !customerExternalId) {
         return new Response(
           JSON.stringify({ error: 'customerExternalId is required for this endpoint' }),
-          { 
+          {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
           }
@@ -54,7 +60,18 @@ export function handleBlocks(apiBase?: string) {
       if (paidEndpoint === 'invoice-pdf' && !invoiceId) {
         return new Response(
           JSON.stringify({ error: 'invoiceId is required for invoice PDF endpoint' }),
-          { 
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      // Validate AI-generated blocks require queryId
+      if (paidEndpoint === 'blocks' && !queryId) {
+        return new Response(
+          JSON.stringify({ error: 'queryId is required for blocks endpoint' }),
+          {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
           }
@@ -62,34 +79,65 @@ export function handleBlocks(apiBase?: string) {
       }
 
       let url: string;
-      switch (paidEndpoint) {
-        case 'invoices':
-          url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}/invoices`;
-          break;
-        case 'payments':
-          url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}/payments`;
-          break;
-        case 'invoice-pdf':
-          url = `${apiBase}/api/organizations/org/invoices/${invoiceId}/pdf`;
-          break;
-        case 'usage':
-          url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}`;
-          break;
-        default:
-          return new Response(
-            JSON.stringify({ error: `Unknown endpoint: ${paidEndpoint}` }),
-            { 
-              status: 400,
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
+      let method: string = 'GET';
+      let body: string | undefined;
+
+      // Build URL and request configuration
+      if (paidEndpoint === 'blocks' && queryId) {
+        // AI-generated blocks: POST to /api/blocks/query/{queryId}
+        url = `${apiBase}/api/blocks/query/${queryId}`;
+        method = 'POST';
+
+        // Parse request body for filter parameters
+        try {
+          const requestBody = await request.json();
+          body = JSON.stringify(requestBody);
+        } catch {
+          // No body provided, send empty object
+          body = JSON.stringify({});
+        }
+      } else {
+        // SDK blocks: existing GET endpoints
+        switch (paidEndpoint) {
+          case 'invoices':
+            url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}/invoices`;
+            break;
+          case 'payments':
+            url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}/payments`;
+            break;
+          case 'invoice-pdf':
+            url = `${apiBase}/api/organizations/org/invoices/${invoiceId}/pdf`;
+            break;
+          case 'usage':
+            url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}`;
+            break;
+          default:
+            return new Response(
+              JSON.stringify({ error: `Unknown endpoint: ${paidEndpoint}` }),
+              {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+              }
+            );
+        }
       }
 
-      const response = await fetch(url, {
+      const fetchOptions: RequestInit = {
+        method,
         headers: {
           'Authorization': `Bearer ${apiKey}`,
         },
-      });
+      };
+
+      if (body) {
+        fetchOptions.headers = {
+          ...fetchOptions.headers,
+          'Content-Type': 'application/json',
+        };
+        fetchOptions.body = body;
+      }
+
+      const response = await fetch(url, fetchOptions);
 
       if (!response.ok) {
         let errorMessage = `HTTP ${response.status}: ${response.statusText}`;

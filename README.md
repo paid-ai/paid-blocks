@@ -41,7 +41,7 @@ The `PaidContainer` is an all-in-one tabbed interface that displays payments, in
 ```tsx
 import { 
   PaidContainer, 
-  PaidActivityLog, 
+  PaidUsageTable, 
   PaidInvoiceTable, 
   PaidPaymentsTable 
 } from '@paid-ai/paid-blocks';
@@ -62,9 +62,9 @@ import {
       component: <PaidInvoiceTable customerExternalId="customer_123" />
     },
     {
-      id: 'activity-log',
+      id: 'usage-table',
       label: 'Activity Log', 
-      component: <PaidActivityLog customerExternalId="customer_123" />
+      component: <PaidUsageTable customerExternalId="customer_123" />
     }
   ]}
   paidStyle={{
@@ -84,7 +84,7 @@ For more granular control, you can use individual blocks:
 import { 
   PaidPaymentsTable, 
   PaidInvoiceTable, 
-  PaidActivityLog 
+  PaidUsageTable 
 } from '@paid-ai/paid-blocks';
 
 // Payments only
@@ -94,7 +94,7 @@ import {
 <PaidInvoiceTable customerExternalId="customer_123" />
 
 // Activity log only
-<PaidActivityLog customerExternalId="customer_123" />
+<PaidUsageTable customerExternalId="customer_123" />
 ```
 
 ---
@@ -119,7 +119,12 @@ Add to `app/api/[paidEndpoint]/[...params]/route.ts`:
 ```ts
 import { handleBlocks } from '@paid-ai/paid-blocks';
 
-export const GET = handleBlocks();
+// Support both GET (SDK blocks) and POST (AI-generated blocks)
+// GET: Used by PaidPaymentsTable, PaidInvoiceTable, PaidUsageTable
+// POST: Used by AI-generated blocks to fetch dynamic data with filters
+const handler = handleBlocks();
+export const GET = handler;
+export const POST = handler;
 ```
 
 ---
@@ -129,7 +134,7 @@ export const GET = handleBlocks();
 ```tsx
 import { 
   PaidContainer,
-  PaidActivityLog,
+  PaidUsageTable,
   PaidInvoiceTable,
   PaidPaymentsTable
 } from '@paid-ai/paid-blocks';
@@ -160,9 +165,9 @@ export default function CustomerDashboard() {
             component: <PaidInvoiceTable customerExternalId="customer_123" />
           },
           {
-            id: 'activity-log',
+            id: 'usage-table',
             label: 'Activity Log',
-            component: <PaidActivityLog customerExternalId="customer_123" />
+            component: <PaidUsageTable customerExternalId="customer_123" />
           }
         ]}
         paidStyle={{
