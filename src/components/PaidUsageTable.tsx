@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useIsInContainer } from './PaidContainer';
 import { Pagination } from './ui/Pagination';
 import { fetchPaidData } from '../utils/apiClient';
-import '../styles/paid-activity-log.css';
+import '../styles/paid-usage-table.css';
 
 interface PaidStyleProperties {
     // Global - Font
@@ -56,12 +56,12 @@ interface UsageApiResponse {
     };
 }
 
-interface PaidActivityLogProps {
+interface PaidUsageTableProps {
     customerExternalId: string;
     paidStyle?: PaidStyleProperties;
 }
 
-export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({ 
+export const PaidUsageTable: React.FC<PaidUsageTableProps> = ({ 
     customerExternalId, 
     paidStyle = {}
 }) => {
@@ -203,15 +203,15 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
     }
 
     return (
-        <div className="paid-activity-log-container" style={{ position: 'relative', minWidth: 0, ...cssVariables }}>
-            <div className="paid-activity-log-table-wrapper" style={{ position: 'relative', width: '100%', height: 'auto', left: undefined, top: undefined, boxShadow: undefined, cursor: undefined }}>
+        <div className="paid-usage-table-container" style={{ position: 'relative', minWidth: 0, ...cssVariables }}>
+            <div className="paid-usage-table-table-wrapper" style={{ position: 'relative', width: '100%', height: 'auto', left: undefined, top: undefined, boxShadow: undefined, cursor: undefined }}>
                 {!isInContainer && (
-                    <div className="paid-activity-log-header">
-                        <h3 className="paid-activity-log-title">Activity Log</h3>
+                    <div className="paid-usage-table-header">
+                        <h3 className="paid-usage-table-title">Usage Table</h3>
                     </div>
                 )}
                 <div style={{ background: '#fff', overflow: 'auto', width: '100%', boxSizing: 'border-box' }}>
-                    <table className="paid-activity-log-table" style={{ width: '100%', maxWidth: '100%', tableLayout: 'fixed' }}>
+                    <table className="paid-usage-table-table" style={{ width: '100%', maxWidth: '100%', tableLayout: 'fixed' }}>
                         <thead>
                             <tr>
                                 <th>Event</th>
@@ -224,7 +224,7 @@ export const PaidActivityLog: React.FC<PaidActivityLogProps> = ({
                         <tbody>
                             {currentUsageSummaries.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="paid-activity-log-empty">
+                                    <td colSpan={5} className="paid-usage-table-empty">
                                         No usage data found
                                     </td>
                                 </tr>
