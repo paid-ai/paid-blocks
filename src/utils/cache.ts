@@ -84,6 +84,9 @@ export const getCacheKey = {
   payments: (accountId: string) => `payments:${accountId}`,
   usage: (accountId: string) => `usage:${accountId}`,
   invoicePdf: (invoiceId: string) => `pdf:invoice:${invoiceId}`,
+  creditBundles: (accountId: string) => `credit-bundles:${accountId}`,
+  alertRules: (accountId: string) => `alert-rules:${accountId}`,
+  planGroups: (accountId: string) => `plan-groups:${accountId}`,
 };
 
 // Cache TTL constants (in milliseconds)

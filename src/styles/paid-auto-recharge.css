@@ -1,0 +1,263 @@
+.paid-auto-recharge-container {
+    font-family: var(--paid-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    background-color: var(--paid-container-background-color, #ffffff);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.paid-auto-recharge-header {
+    margin-bottom: 1.5rem;
+}
+
+.paid-auto-recharge-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--paid-primary-color, #111827);
+    margin: 0 0 0.5rem 0;
+}
+
+.paid-auto-recharge-subtitle {
+    font-size: 0.95rem;
+    color: var(--paid-secondary-color, #6b7280);
+    margin: 0;
+}
+
+.paid-auto-recharge-loading,
+.paid-auto-recharge-error {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: var(--paid-secondary-color, #6b7280);
+    font-size: 0.95rem;
+}
+
+.paid-auto-recharge-error {
+    color: #ef4444;
+}
+
+.paid-auto-recharge-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.paid-auto-recharge-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.paid-auto-recharge-empty h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--paid-primary-color, #111827);
+    margin: 0 0 0.5rem 0;
+}
+
+.paid-auto-recharge-empty p {
+    font-size: 0.95rem;
+    color: var(--paid-secondary-color, #6b7280);
+    margin: 0;
+}
+
+.paid-auto-recharge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.paid-auto-recharge-card {
+    background-color: var(--paid-table-background-color, #f9fafb);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.paid-auto-recharge-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.paid-auto-recharge-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.paid-auto-recharge-card-info {
+    flex: 1;
+}
+
+.paid-auto-recharge-rule-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--paid-primary-color, #111827);
+    margin: 0 0 0.5rem 0;
+}
+
+.paid-auto-recharge-rule-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--paid-secondary-color, #6b7280);
+}
+
+.paid-auto-recharge-condition-type {
+    font-weight: 500;
+}
+
+.paid-auto-recharge-threshold {
+    color: #6366f1;
+    font-weight: 500;
+}
+
+/* Toggle Switch */
+.paid-auto-recharge-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+}
+
+.paid-auto-recharge-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.paid-auto-recharge-toggle-track {
+    width: 48px;
+    height: 24px;
+    background-color: #d1d5db;
+    border-radius: 9999px;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.paid-auto-recharge-toggle.active .paid-auto-recharge-toggle-track {
+    background-color: #10b981;
+}
+
+.paid-auto-recharge-toggle-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 9999px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.paid-auto-recharge-toggle.active .paid-auto-recharge-toggle-thumb {
+    transform: translateX(24px);
+}
+
+.paid-auto-recharge-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.paid-auto-recharge-currencies {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.paid-auto-recharge-currencies-label {
+    font-size: 0.875rem;
+    color: var(--paid-secondary-color, #6b7280);
+    font-weight: 500;
+}
+
+.paid-auto-recharge-currencies-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.paid-auto-recharge-currency-badge {
+    background-color: var(--paid-button-bg-color, #e0e7ff);
+    color: #4f46e5;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.paid-auto-recharge-status {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.paid-auto-recharge-status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.paid-auto-recharge-status-badge.active {
+    background-color: #d1fae5;
+    color: #047857;
+}
+
+.paid-auto-recharge-status-badge.inactive {
+    background-color: #f3f4f6;
+    color: #6b7280;
+}
+
+.paid-auto-recharge-scope-badge {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.paid-auto-recharge-info {
+    display: flex;
+    gap: 0.75rem;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #1e40af;
+}
+
+.paid-auto-recharge-info-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.paid-auto-recharge-info-content {
+    line-height: 1.6;
+}
+
+.paid-auto-recharge-info-content strong {
+    font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .paid-auto-recharge-card-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .paid-auto-recharge-rule-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .paid-auto-recharge-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
