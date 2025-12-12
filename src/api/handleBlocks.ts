@@ -1,4 +1,4 @@
-type PaidEndpoint = 'invoices' | 'payments' | 'invoice-pdf' | 'usage' | 'blocks';
+type PaidEndpoint = 'invoices' | 'payments' | 'invoice-pdf' | 'usage' | 'blocks' | 'credit-bundles' | 'alert-rules' | 'plan-groups';
 
 interface Params {
   paidEndpoint: string;
@@ -47,7 +47,8 @@ export function handleBlocks(apiBase?: string) {
       }
 
       // Validate SDK blocks require customerExternalId
-      if ((paidEndpoint === 'invoices' || paidEndpoint === 'payments' || paidEndpoint === 'usage') && !customerExternalId) {
+      if ((paidEndpoint === 'invoices' || paidEndpoint === 'payments' || paidEndpoint === 'usage' ||
+           paidEndpoint === 'credit-bundles' || paidEndpoint === 'alert-rules' || paidEndpoint === 'plan-groups') && !customerExternalId) {
         return new Response(
           JSON.stringify({ error: 'customerExternalId is required for this endpoint' }),
           {
@@ -110,6 +111,15 @@ export function handleBlocks(apiBase?: string) {
             break;
           case 'usage':
             url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}`;
+            break;
+          case 'credit-bundles':
+            url = `${apiBase}/api/organizations/org/customer/external/${customerExternalId}/credit-bundles`;
+            break;
+          case 'alert-rules':
+            url = `${apiBase}/api/organizations/org/alert-rules?customerId=${customerExternalId}`;
+            break;
+          case 'plan-groups':
+            url = `${apiBase}/api/organizations/org/planGroups`;
             break;
           default:
             return new Response(

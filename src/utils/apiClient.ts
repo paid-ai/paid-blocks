@@ -1,6 +1,6 @@
 import { dataCache, getCacheKey, CACHE_TTL } from './cache';
 
-type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice';
+type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice' | 'credit-bundles' | 'alert-rules' | 'plan-groups';
 
 export interface PaidBlocksOptions {
   baseUrl?: string;
@@ -84,6 +84,15 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
         case 'usage':
           url = `${baseUrl}/customers/${customerExternalId}/usage`;
           break;
+        case 'credit-bundles':
+          url = `${baseUrl}/customers/${customerExternalId}/credit-bundles`;
+          break;
+        case 'alert-rules':
+          url = `${baseUrl}/customers/${customerExternalId}/alert-rules`;
+          break;
+        case 'plan-groups':
+          url = `${baseUrl}/customers/${customerExternalId}/plan-groups`;
+          break;
         default:
           throw new Error(`Unknown endpoint: ${paidEndpoint}`);
       }
@@ -101,6 +110,15 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
         break;
       case 'usage':
         cacheKey = getCacheKey.usage(customerExternalId);
+        break;
+      case 'credit-bundles':
+        cacheKey = getCacheKey.creditBundles(customerExternalId);
+        break;
+      case 'alert-rules':
+        cacheKey = getCacheKey.alertRules(customerExternalId);
+        break;
+      case 'plan-groups':
+        cacheKey = getCacheKey.planGroups(customerExternalId);
         break;
       default:
         throw new Error(`Unknown endpoint: ${paidEndpoint}`);
