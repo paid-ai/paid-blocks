@@ -2,59 +2,58 @@ import { useCallback } from 'react';
 import { fetchPaidData, PaidBlocksOptions } from '../../utils/apiClient';
 import { useStripePayment } from './useStripePayment';
 
-interface UsePayInvoiceOptions {
-  invoiceId: string;
+interface UsePayCheckoutOptions {
+  sessionToken: string;
   options?: PaidBlocksOptions;
   onSuccess?: (result: any) => void;
   onError?: (error: string) => void;
 }
 
-interface UsePayInvoiceResult {
+interface UsePayCheckoutResult {
   state: {
     isProcessing: boolean;
     error: string | null;
     isComplete: boolean;
   };
-  payInvoice: (stripe: any, elements: any) => Promise<void>;
+  payCheckout: (stripe: any, elements: any) => Promise<void>;
   resetError: () => void;
 }
 
-export function usePayInvoice({
-  invoiceId,
+export function usePayCheckout({
+  sessionToken,
   options,
   onSuccess,
   onError,
-}: UsePayInvoiceOptions): UsePayInvoiceResult {
+}: UsePayCheckoutOptions): UsePayCheckoutResult {
   const { state, processPayment, resetError } = useStripePayment({
     onSuccess,
     onError,
   });
 
-  const payInvoice = useCallback(
+  const payCheckout = useCallback(
     async (stripe: any, elements: any) => {
-      if (!stripe || !elements || !invoiceId) {
+      if (!stripe || !elements || !sessionToken) {
         return;
       }
 
       await processPayment(stripe, elements, async (confirmationToken, returnUrl) => {
         return fetchPaidData({
-          paidEndpoint: 'pay-invoice',
-          invoiceId,
+          paidEndpoint: 'complete-checkout',
+          sessionToken,
           body: {
-            invoiceId,
-            confirmationToken,
-            returnUrl,
+            confirmation_token: confirmationToken,
+            return_url: returnUrl,
           },
           options,
-        });
+        }) as any;
       });
     },
-    [invoiceId, options, processPayment],
+    [sessionToken, options, processPayment],
   );
 
   return {
     state,
-    payInvoice,
+    payCheckout,
     resetError,
   };
 }

@@ -1,6 +1,6 @@
 import { dataCache, getCacheKey, CACHE_TTL } from './cache';
 
-type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice';
+type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice' | 'complete-checkout';
 
 export interface PaidBlocksOptions {
   baseUrl?: string;
@@ -11,6 +11,7 @@ interface ApiClientOptions {
   paidEndpoint: PaidEndpoint;
   customerExternalId?: string;
   invoiceId?: string;
+  sessionToken?: string;
   body?: any;
   options?: PaidBlocksOptions;
 }
@@ -39,7 +40,7 @@ class CachedResponse {
   }
 }
 
-export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, body, options }: ApiClientOptions) {
+export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, sessionToken, body, options }: ApiClientOptions) {
   let url: string;
   let cacheKey: string | null = null;
   let ttl: number = 0;
@@ -51,7 +52,14 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
   const baseUrl = options?.baseUrl;
   const isCustomBackend = !!baseUrl;
 
-  if (paidEndpoint === 'pay-invoice' && invoiceId) {
+  if (paidEndpoint === 'complete-checkout' && sessionToken) {
+    method = 'POST';
+    if (isCustomBackend) {
+      url = `${baseUrl}/api/public/checkout/${sessionToken}/complete`;
+    } else {
+      url = `/api/complete-checkout/${sessionToken}`;
+    }
+  } else if (paidEndpoint === 'pay-invoice' && invoiceId) {
     method = 'POST';
     if (isCustomBackend) {
       // Custom backend pattern: {baseUrl}/payments/pay-invoice
