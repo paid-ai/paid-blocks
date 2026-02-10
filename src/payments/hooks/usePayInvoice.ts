@@ -46,7 +46,7 @@ export function usePayInvoice({
             returnUrl,
           },
           options,
-        });
+        }) as any;
       });
     },
     [invoiceId, options, processPayment],

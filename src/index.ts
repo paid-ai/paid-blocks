@@ -9,3 +9,5 @@ export type { PaidBlocksOptions } from './utils/apiClient';
 export { runPaidQuery } from './utils/queryProxy';
 export { Pagination } from './components/ui/Pagination';
 export { useCache } from './hooks/useCache';
+export { CheckoutPaymentForm } from './payments/components/CheckoutPaymentForm';
+export { usePayCheckout } from './payments/hooks/usePayCheckout';
