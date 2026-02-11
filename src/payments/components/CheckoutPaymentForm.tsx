@@ -16,6 +16,12 @@ interface CheckoutSession {
   customer: {
     email: string | null;
   };
+  pricing?: {
+    amount: number;
+    currency: string;
+    subtotal?: number;
+    tax?: number;
+  } | null;
 }
 
 interface CheckoutPaymentFormProps {
@@ -36,6 +42,12 @@ interface PaymentFormProps {
 const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, onCancel }) => {
   const stripe = useStripe();
   const elements = useElements();
+
+  if (!session.pricing) {
+    return null;
+  }
+
+  const pricing = session.pricing;
 
   const { state, payCheckout } = usePayCheckout({
     sessionToken: session.token,
@@ -88,7 +100,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
         <div className="paid-invoice-payment-row">
           <span>Amount Due:</span>
           <span className="paid-invoice-payment-amount">
-            {formatCurrency(100, 'USD')}
+            {formatCurrency(pricing.amount, pricing.currency)}
           </span>
         </div>
 
@@ -157,7 +169,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
               cursor: (!stripe || state.isProcessing) ? 'not-allowed' : 'pointer',
             }}
           >
-            {state.isProcessing ? 'Processing...' : `Pay ${formatCurrency(100, 'USD')}`}
+            {state.isProcessing
+              ? 'Processing...'
+              : `Pay ${formatCurrency(pricing.amount, pricing.currency)}`
+            }
           </button>
         </div>
       </div>
@@ -188,13 +203,21 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
     );
   }
 
+  if (!session.pricing) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem', color: '#ef4444' }}>
+        Unable to calculate pricing for this checkout session.
+      </div>
+    );
+  }
+
   return (
     <Elements
       stripe={stripePromise}
       options={{
         mode: 'payment',
-        amount: 100,
-        currency: 'usd',
+        amount: session.pricing.amount,
+        currency: session.pricing.currency.toLowerCase(),
         setup_future_usage: 'off_session',
       }}
     >
