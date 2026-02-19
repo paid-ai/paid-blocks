@@ -27,6 +27,7 @@ interface CheckoutSession {
 interface CheckoutPaymentFormProps {
   session: CheckoutSession;
   stripePublishableKey: string;
+  stripeAccount?: string;
   options?: PaidBlocksOptions;
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -53,8 +54,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
     sessionToken: session.token,
     options,
     onSuccess: (result) => {
-      if (onSuccess) onSuccess();
-      if (result.data?.redirect_url) {
+      if (onSuccess) {
+        onSuccess();
+      } else if (result.data?.redirect_url) {
         window.location.href = result.data.redirect_url;
       }
     },
@@ -183,6 +185,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
 export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
   session,
   stripePublishableKey,
+  stripeAccount,
   options,
   onSuccess,
   onCancel,
@@ -191,9 +194,9 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
 
   useEffect(() => {
     if (stripePublishableKey) {
-      setStripePromise(loadStripe(stripePublishableKey));
+      setStripePromise(loadStripe(stripePublishableKey, stripeAccount ? { stripeAccount } : undefined));
     }
-  }, [stripePublishableKey]);
+  }, [stripePublishableKey, stripeAccount]);
 
   if (!stripePromise) {
     return (
