@@ -28,6 +28,7 @@ interface CheckoutPaymentFormProps {
   session: CheckoutSession;
   stripePublishableKey: string;
   stripeAccount?: string;
+  customerSessionClientSecret?: string;
   options?: PaidBlocksOptions;
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -186,6 +187,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
   session,
   stripePublishableKey,
   stripeAccount,
+  customerSessionClientSecret,
   options,
   onSuccess,
   onCancel,
@@ -222,6 +224,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
         amount: session.pricing.amount,
         currency: session.pricing.currency.toLowerCase(),
         setup_future_usage: 'off_session',
+        ...(customerSessionClientSecret ? { customerSessionClientSecret } : {}),
       }}
     >
       <PaymentForm
