@@ -224,6 +224,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
         amount: session.pricing.amount,
         currency: session.pricing.currency.toLowerCase(),
         setup_future_usage: 'off_session',
+        payment_method_types: ['card'],
         ...(customerSessionClientSecret ? { customerSessionClientSecret } : {}),
       }}
     >
