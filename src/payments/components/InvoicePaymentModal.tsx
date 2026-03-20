@@ -203,6 +203,7 @@ export const InvoicePaymentModal: React.FC<InvoicePaymentModalProps> = ({
               amount: invoice.invoiceTotal,
               currency: invoice.currency.toLowerCase(),
               setup_future_usage: 'off_session',
+              payment_method_types: ['card'],
             }}
           >
             <PaymentForm
