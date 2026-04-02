@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, AddressElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { usePayCheckout } from '../hooks/usePayCheckout';
 import { PaidBlocksOptions } from '../../utils/apiClient';
 
@@ -32,6 +32,7 @@ interface CheckoutPaymentFormProps {
   options?: PaidBlocksOptions;
   onSuccess?: () => void;
   onCancel?: () => void;
+  collectAddress?: boolean;
 }
 
 interface PaymentFormProps {
@@ -39,9 +40,10 @@ interface PaymentFormProps {
   options?: PaidBlocksOptions;
   onSuccess?: () => void;
   onCancel?: () => void;
+  collectAddress?: boolean;
 }
 
-const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, onCancel }) => {
+const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, onCancel, collectAddress }) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -116,6 +118,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
       </div>
 
       <div className="paid-invoice-payment-form">
+        {collectAddress && (
+          <AddressElement options={{ mode: 'billing' }} />
+        )}
         <PaymentElement />
 
         {state.error && (
@@ -191,6 +196,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
   options,
   onSuccess,
   onCancel,
+  collectAddress,
 }) => {
   const [stripePromise, setStripePromise] = useState<any>(null);
 
@@ -233,6 +239,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
         options={options}
         onSuccess={onSuccess}
         onCancel={onCancel}
+        collectAddress={collectAddress}
       />
     </Elements>
   );
