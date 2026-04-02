@@ -1,6 +1,6 @@
 import { dataCache, getCacheKey, CACHE_TTL } from './cache';
 
-type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice' | 'complete-checkout';
+type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice' | 'complete-checkout' | 'payment-methods' | 'add-payment-method' | 'remove-payment-method' | 'set-default-payment-method';
 
 export interface PaidBlocksOptions {
   baseUrl?: string;
@@ -12,6 +12,7 @@ interface ApiClientOptions {
   customerExternalId?: string;
   invoiceId?: string;
   sessionToken?: string;
+  portalToken?: string;
   body?: any;
   options?: PaidBlocksOptions;
 }
@@ -40,7 +41,7 @@ class CachedResponse {
   }
 }
 
-export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, sessionToken, body, options }: ApiClientOptions) {
+export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceId, sessionToken, portalToken, body, options }: ApiClientOptions) {
   let url: string;
   let cacheKey: string | null = null;
   let ttl: number = 0;
@@ -59,6 +60,35 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
     } else {
       url = `/api/complete-checkout/${sessionToken}`;
     }
+  } else if (paidEndpoint === 'payment-methods' && portalToken) {
+    method = 'GET';
+    if (isCustomBackend) {
+      url = `${baseUrl}/api/public/customers/${portalToken}/payment-methods`;
+    } else {
+      url = `/api/payment-methods/${portalToken}`;
+    }
+    // No caching — payment methods can change frequently
+  } else if (paidEndpoint === 'add-payment-method' && portalToken) {
+    method = 'POST';
+    if (isCustomBackend) {
+      url = `${baseUrl}/api/public/customers/${portalToken}/payment-methods`;
+    } else {
+      url = `/api/add-payment-method/${portalToken}`;
+    }
+  } else if (paidEndpoint === 'remove-payment-method' && portalToken && body?.paymentMethodId) {
+    method = 'DELETE';
+    if (isCustomBackend) {
+      url = `${baseUrl}/api/public/customers/${portalToken}/payment-methods/${body.paymentMethodId}`;
+    } else {
+      url = `/api/remove-payment-method/${portalToken}/${body.paymentMethodId}`;
+    }
+  } else if (paidEndpoint === 'set-default-payment-method' && portalToken && body?.paymentMethodId) {
+      method = 'PUT';
+      if (isCustomBackend) {
+          url = `${baseUrl}/api/public/customers/${portalToken}/payment-methods/${body.paymentMethodId}/default`;
+      } else {
+          url = `/api/set-default-payment-method/${portalToken}/${body.paymentMethodId}`;
+      }
   } else if (paidEndpoint === 'pay-invoice' && invoiceId) {
     method = 'POST';
     if (isCustomBackend) {
