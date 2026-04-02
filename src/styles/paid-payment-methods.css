@@ -87,48 +87,49 @@
 .paid-pm-row-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
 }
 
-/* Shared solid button base — matches portal bg-primary pattern */
-.paid-pm-edit-btn,
-.paid-pm-remove-btn,
-.paid-pm-set-default-btn {
-  padding: 5px 12px;
+/* Edit Button — text-only ghost */
+.paid-pm-edit-btn {
+  padding: 4px 8px;
   border: none;
-  border-radius: 6px;
-  background: var(--paid-btn-bg, #18181b);
-  color: var(--paid-btn-fg, #fff);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--paid-secondary-color, #98a2b3);
   font-size: 0.75rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 }
 
-.paid-pm-edit-btn:hover,
-.paid-pm-remove-btn:hover,
-.paid-pm-set-default-btn:hover {
-  opacity: 0.8;
+.paid-pm-edit-btn:hover {
+  color: var(--paid-primary-color, #344054);
 }
 
-.paid-pm-edit-btn:disabled,
-.paid-pm-remove-btn:disabled,
-.paid-pm-set-default-btn:disabled {
+.paid-pm-edit-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* Remove gets a destructive variant */
+/* Remove Button — text-only ghost */
 .paid-pm-remove-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
   background: transparent;
   color: var(--paid-secondary-color, #98a2b3);
-  border: 1px solid #e5e7eb;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
 .paid-pm-remove-btn:hover {
-  opacity: 1;
-  border-color: #d92d20;
   color: #d92d20;
+}
+
+.paid-pm-remove-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Default badge */
@@ -142,6 +143,27 @@
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.01em;
+}
+
+/* Set as default button */
+.paid-pm-set-default-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--paid-secondary-color, #98a2b3);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.paid-pm-set-default-btn:hover {
+  color: var(--paid-primary-color, #344054);
+}
+
+.paid-pm-set-default-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Last-card confirmation */
@@ -168,19 +190,19 @@
 }
 
 .paid-pm-confirm-remove-btn {
-  padding: 5px 12px;
+  padding: 4px 12px;
   border: none;
-  border-radius: 6px;
-  background: #d92d20;
-  color: #fff;
+  border-radius: 4px;
+  background: transparent;
+  color: #d92d20;
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .paid-pm-confirm-remove-btn:hover {
-  opacity: 0.8;
+  background: #fef3f2;
 }
 
 .paid-pm-confirm-remove-btn:disabled {
@@ -188,26 +210,24 @@
   cursor: not-allowed;
 }
 
-/* Add Payment Method Button */
+/* Add Payment Method Button — text link style */
 .paid-pm-add-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 4px;
-  padding: 7px 16px;
-  margin-top: 8px;
+  padding: 6px 0;
+  margin-top: 4px;
   border: none;
-  border-radius: 6px;
-  background: var(--paid-btn-bg, #18181b);
-  color: var(--paid-btn-fg, #fff);
+  background: transparent;
+  color: var(--paid-secondary-color, #667085);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .paid-pm-add-btn:hover {
-  opacity: 0.8;
+  color: var(--paid-accent-color, #7c3aed);
 }
 
 /* Add Form */
@@ -227,18 +247,17 @@
 
 .paid-pm-cancel-btn {
   padding: 6px 14px;
-  border: 1px solid #e5e7eb;
+  border: none;
   border-radius: 6px;
-  background: #fff;
+  background: transparent;
   color: var(--paid-secondary-color, #667085);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .paid-pm-cancel-btn:hover {
-  border-color: #d0d5dd;
   color: var(--paid-primary-color, #344054);
 }
 
@@ -251,8 +270,8 @@
   padding: 6px 16px;
   border: none;
   border-radius: 6px;
-  background: var(--paid-btn-bg, #18181b);
-  color: var(--paid-btn-fg, #fff);
+  background: var(--paid-accent-color, #7c3aed);
+  color: #fff;
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
@@ -260,7 +279,7 @@
 }
 
 .paid-pm-save-btn:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .paid-pm-save-btn:disabled {
