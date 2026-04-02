@@ -10,3 +10,4 @@ export { useListPaymentMethods } from './hooks/useListPaymentMethods';
 export type { PaymentMethodItem } from './hooks/useListPaymentMethods';
 export { useAddPaymentMethod } from './hooks/useAddPaymentMethod';
 export { useRemovePaymentMethod } from './hooks/useRemovePaymentMethod';
+export { useSetDefaultPaymentMethod } from "./hooks/useSetDefaultPaymentMethod";

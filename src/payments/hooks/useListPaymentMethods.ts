@@ -11,6 +11,7 @@ export interface PaymentMethodItem {
     expMonth: number;
     expYear: number;
   };
+  isDefault: boolean;
   createdAt: string;
 }
 

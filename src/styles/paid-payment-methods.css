@@ -1,0 +1,269 @@
+/* Payment Method Manager Styles */
+.paid-pm-manager {
+  font-family: var(--paid-font-family, 'Inter', 'Roboto', system-ui, sans-serif);
+  width: 100%;
+}
+
+/* Loading & Error States */
+.paid-pm-loading {
+  padding: 24px 0;
+  color: var(--paid-secondary-color, #667085);
+  font-size: 0.8125rem;
+}
+
+.paid-pm-error {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #fef3f2;
+  color: #d92d20;
+  font-size: 0.8125rem;
+  margin-top: 8px;
+}
+
+/* Empty State */
+.paid-pm-empty {
+  padding: 24px 0;
+  color: var(--paid-secondary-color, #98a2b3);
+  font-size: 0.8125rem;
+}
+
+/* Card List */
+.paid-pm-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card Row */
+.paid-pm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.paid-pm-row-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Card Brand Icon */
+.paid-pm-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.paid-pm-card-icon svg {
+  width: 36px;
+  height: 24px;
+  border-radius: 3px;
+}
+
+/* Card Details — single line */
+.paid-pm-card-details {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.paid-pm-card-number {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--paid-primary-color, #344054);
+}
+
+.paid-pm-card-expiry {
+  font-size: 0.75rem;
+  color: var(--paid-secondary-color, #98a2b3);
+}
+
+/* Row Actions */
+.paid-pm-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Shared solid button base — matches portal bg-primary pattern */
+.paid-pm-edit-btn,
+.paid-pm-remove-btn,
+.paid-pm-set-default-btn {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  background: var(--paid-btn-bg, #18181b);
+  color: var(--paid-btn-fg, #fff);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.paid-pm-edit-btn:hover,
+.paid-pm-remove-btn:hover,
+.paid-pm-set-default-btn:hover {
+  opacity: 0.8;
+}
+
+.paid-pm-edit-btn:disabled,
+.paid-pm-remove-btn:disabled,
+.paid-pm-set-default-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Remove gets a destructive variant */
+.paid-pm-remove-btn {
+  background: transparent;
+  color: var(--paid-secondary-color, #98a2b3);
+  border: 1px solid #e5e7eb;
+}
+
+.paid-pm-remove-btn:hover {
+  opacity: 1;
+  border-color: #d92d20;
+  color: #d92d20;
+}
+
+/* Default badge */
+.paid-pm-default-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Last-card confirmation */
+.paid-pm-confirm {
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.paid-pm-confirm-text {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #92400e;
+  line-height: 1.4;
+}
+
+.paid-pm-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.paid-pm-confirm-remove-btn {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #d92d20;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.paid-pm-confirm-remove-btn:hover {
+  opacity: 0.8;
+}
+
+.paid-pm-confirm-remove-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Add Payment Method Button */
+.paid-pm-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 16px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 6px;
+  background: var(--paid-btn-bg, #18181b);
+  color: var(--paid-btn-fg, #fff);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.paid-pm-add-btn:hover {
+  opacity: 0.8;
+}
+
+/* Add Form */
+.paid-pm-add-form {
+  margin-top: 8px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.paid-pm-add-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.paid-pm-cancel-btn {
+  padding: 6px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--paid-secondary-color, #667085);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.paid-pm-cancel-btn:hover {
+  border-color: #d0d5dd;
+  color: var(--paid-primary-color, #344054);
+}
+
+.paid-pm-cancel-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.paid-pm-save-btn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--paid-btn-bg, #18181b);
+  color: var(--paid-btn-fg, #fff);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.paid-pm-save-btn:hover {
+  opacity: 0.8;
+}
+
+.paid-pm-save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
