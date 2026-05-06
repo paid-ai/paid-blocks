@@ -16,7 +16,18 @@ interface UseStripePaymentResult {
   processPayment: (
     stripe: any,
     elements: any,
-    submitFn: (confirmationToken: string, returnUrl: string) => Promise<Response>
+    submitFn: (confirmationToken: string, returnUrl: string) => Promise<Response>,
+    /**
+     * Optional callback invoked after a successful 3DS challenge to re-confirm
+     * with the backend that the PaymentIntent has reached `succeeded`. Required
+     * for backends that gate order creation on payment success — without this,
+     * the 3DS path silently never tells the backend the PI completed, and any
+     * post-charge commit step is never triggered.
+     *
+     * The returned response replaces the original `complete` result that gets
+     * passed to `onSuccess`.
+     */
+    finalizeFn?: () => Promise<Response>
   ) => Promise<void>;
   resetError: () => void;
 }
@@ -41,7 +52,8 @@ export function useStripePayment({
     async (
       stripe: any,
       elements: any,
-      submitFn: (confirmationToken: string, returnUrl: string) => Promise<any>
+      submitFn: (confirmationToken: string, returnUrl: string) => Promise<any>,
+      finalizeFn?: () => Promise<any>
     ) => {
       if (!stripe || !elements) {
         return;
@@ -88,7 +100,7 @@ export function useStripePayment({
           throw new Error(errorData.error || 'Failed to process payment');
         }
 
-        const result = await response.json();
+        let result = await response.json();
 
         const paymentIntent = result.data?.payment_intent;
         if (paymentIntent?.status === 'requires_action' && paymentIntent?.client_secret) {
@@ -97,6 +109,20 @@ export function useStripePayment({
           });
           if (nextErr) {
             throw new Error(nextErr.message || 'Authentication failed');
+          }
+
+          // After 3DS succeeds we must tell the backend so it can run any
+          // post-charge commit step (e.g. create the order). Without this the
+          // backend would still see the PI as `requires_action`.
+          if (finalizeFn) {
+            const finalizeResp = await finalizeFn();
+            if (!finalizeResp.ok) {
+              const errData = await finalizeResp.json().catch(() => ({}));
+              throw new Error(
+                errData.error || errData.message || 'Failed to finalize payment after authentication',
+              );
+            }
+            result = await finalizeResp.json();
           }
         }
 

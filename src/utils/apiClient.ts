@@ -1,6 +1,6 @@
 import { dataCache, getCacheKey, CACHE_TTL } from './cache';
 
-type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice' | 'complete-checkout' | 'payment-methods' | 'add-payment-method' | 'remove-payment-method' | 'set-default-payment-method';
+type PaidEndpoint = 'invoices' | 'payments' | 'usage' | 'invoice-pdf' | 'pay-invoice' | 'complete-checkout' | 'finalize-checkout' | 'payment-methods' | 'add-payment-method' | 'remove-payment-method' | 'set-default-payment-method';
 
 export interface PaidBlocksOptions {
   baseUrl?: string;
@@ -59,6 +59,13 @@ export async function fetchPaidData({ paidEndpoint, customerExternalId, invoiceI
       url = `${baseUrl}/api/public/checkout/${sessionToken}/complete`;
     } else {
       url = `/api/complete-checkout/${sessionToken}`;
+    }
+  } else if (paidEndpoint === 'finalize-checkout' && sessionToken) {
+    method = 'POST';
+    if (isCustomBackend) {
+      url = `${baseUrl}/api/public/checkout/${sessionToken}/finalize`;
+    } else {
+      url = `/api/finalize-checkout/${sessionToken}`;
     }
   } else if (paidEndpoint === 'payment-methods' && portalToken) {
     method = 'GET';

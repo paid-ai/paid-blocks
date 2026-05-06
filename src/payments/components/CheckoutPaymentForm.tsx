@@ -24,20 +24,42 @@ interface CheckoutSession {
   } | null;
 }
 
+/**
+ * Body returned from POST /complete or /finalize on the Paid backend.
+ * After a 3DS challenge, the result here reflects the finalize response
+ * (the second round-trip), so consumers can rely on `order_id` /
+ * `invoice_id` being present for both sync-success and 3DS flows.
+ */
+export interface CheckoutCompleteResult {
+  success?: boolean;
+  data?: {
+    status?: 'succeeded' | 'requires_action' | string;
+    order_id?: string;
+    invoice_id?: string;
+    redirect_url?: string | null;
+    payment_intent?: {
+      id: string;
+      status: string;
+      client_secret?: string;
+    };
+  };
+  message?: string;
+}
+
 interface CheckoutPaymentFormProps {
   session: CheckoutSession;
   stripePublishableKey: string;
   stripeAccount?: string;
   customerSessionClientSecret?: string;
   options?: PaidBlocksOptions;
-  onSuccess?: () => void;
+  onSuccess?: (result?: CheckoutCompleteResult) => void;
   onCancel?: () => void;
 }
 
 interface PaymentFormProps {
   session: CheckoutSession;
   options?: PaidBlocksOptions;
-  onSuccess?: () => void;
+  onSuccess?: (result?: CheckoutCompleteResult) => void;
   onCancel?: () => void;
 }
 
@@ -56,8 +78,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
     options,
     onSuccess: (result) => {
       if (onSuccess) {
-        onSuccess();
-      } else if (result.data?.redirect_url) {
+        onSuccess(result as CheckoutCompleteResult);
+      } else if (result?.data?.redirect_url) {
         window.location.href = result.data.redirect_url;
       }
     },

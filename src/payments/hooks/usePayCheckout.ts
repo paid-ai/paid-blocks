@@ -36,17 +36,29 @@ export function usePayCheckout({
         return;
       }
 
-      await processPayment(stripe, elements, async (confirmationToken, returnUrl) => {
-        return fetchPaidData({
-          paidEndpoint: 'complete-checkout',
-          sessionToken,
-          body: {
-            confirmation_token: confirmationToken,
-            return_url: returnUrl,
-          },
-          options,
-        }) as any;
-      });
+      await processPayment(
+        stripe,
+        elements,
+        async (confirmationToken, returnUrl) => {
+          return fetchPaidData({
+            paidEndpoint: 'complete-checkout',
+            sessionToken,
+            body: {
+              confirmation_token: confirmationToken,
+              return_url: returnUrl,
+            },
+            options,
+          }) as any;
+        },
+        async () => {
+          return fetchPaidData({
+            paidEndpoint: 'finalize-checkout',
+            sessionToken,
+            body: {},
+            options,
+          }) as any;
+        },
+      );
     },
     [sessionToken, options, processPayment],
   );
