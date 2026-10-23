@@ -46,12 +46,31 @@ export interface CheckoutCompleteResult {
   message?: string;
 }
 
+/**
+ * The buyer's billing address, when the host page already knows it.
+ * `country` is an ISO 3166-1 alpha-2 code such as "US".
+ */
+export interface CheckoutBillingAddress {
+  line1?: string | null;
+  line2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
+  country?: string | null;
+}
+
 interface CheckoutPaymentFormProps {
   session: CheckoutSession;
   stripePublishableKey: string;
   stripeAccount?: string;
   customerSessionClientSecret?: string;
   options?: PaidBlocksOptions;
+  /**
+   * Pre-fills the card form's billing country and postcode. Without it,
+   * Stripe guesses the country from the browser. The buyer can still change
+   * them, and a new value passed later replaces the pre-filled one.
+   */
+  billingAddress?: CheckoutBillingAddress | null;
   onSuccess?: (result?: CheckoutCompleteResult) => void;
   onCancel?: () => void;
 }
@@ -59,13 +78,48 @@ interface CheckoutPaymentFormProps {
 interface PaymentFormProps {
   session: CheckoutSession;
   options?: PaidBlocksOptions;
+  billingAddress?: CheckoutBillingAddress | null;
   onSuccess?: (result?: CheckoutCompleteResult) => void;
   onCancel?: () => void;
 }
 
-const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, onCancel }) => {
+const ISO_COUNTRY_CODE = /^[A-Z]{2}$/;
+
+/**
+ * Maps the address to the Payment Element's `defaultValues` shape. Empty
+ * fields are left out, and so is a country that is not a 2-letter code
+ * (a stored name such as "United States"): Stripe only takes ISO codes.
+ */
+function toPaymentElementAddress(
+  address?: CheckoutBillingAddress | null,
+): Record<string, string> | undefined {
+  if (!address) return undefined;
+  const country = address.country?.trim().toUpperCase();
+  const fields: Record<string, string | null | undefined> = {
+    line1: address.line1,
+    line2: address.line2,
+    city: address.city,
+    state: address.state,
+    postal_code: address.postalCode,
+    country: country && ISO_COUNTRY_CODE.test(country) ? country : undefined,
+  };
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(fields)) {
+    const trimmed = value?.trim();
+    if (trimmed) result[key] = trimmed;
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
+}
+
+const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, billingAddress, onSuccess, onCancel }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const defaultAddress = toPaymentElementAddress(billingAddress);
+  // react-stripe-js compares options by value and calls element.update() when
+  // they change, so a later address replaces the pre-filled one in place.
+  const paymentElementOptions = defaultAddress
+    ? { defaultValues: { billingDetails: { address: defaultAddress } } }
+    : undefined;
 
   if (!session.pricing) {
     return null;
@@ -138,7 +192,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
       </div>
 
       <div className="paid-invoice-payment-form">
-        <PaymentElement />
+        <PaymentElement options={paymentElementOptions} />
 
         {state.error && (
           <div style={{
@@ -211,6 +265,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
   stripeAccount,
   customerSessionClientSecret,
   options,
+  billingAddress,
   onSuccess,
   onCancel,
 }) => {
@@ -253,6 +308,7 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
       <PaymentForm
         session={session}
         options={options}
+        billingAddress={billingAddress}
         onSuccess={onSuccess}
         onCancel={onCancel}
       />
