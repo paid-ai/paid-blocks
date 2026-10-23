@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { fetchPaidData, PaidBlocksOptions } from '../../utils/apiClient';
-import { useStripePayment } from './useStripePayment';
+import { useStripePayment, PaymentBillingDetails } from './useStripePayment';
 
 interface UsePayCheckoutOptions {
   sessionToken: string;
@@ -15,7 +15,7 @@ interface UsePayCheckoutResult {
     error: string | null;
     isComplete: boolean;
   };
-  payCheckout: (stripe: any, elements: any) => Promise<void>;
+  payCheckout: (stripe: any, elements: any, billingDetails?: PaymentBillingDetails) => Promise<void>;
   resetError: () => void;
 }
 
@@ -31,7 +31,7 @@ export function usePayCheckout({
   });
 
   const payCheckout = useCallback(
-    async (stripe: any, elements: any) => {
+    async (stripe: any, elements: any, billingDetails?: PaymentBillingDetails) => {
       if (!stripe || !elements || !sessionToken) {
         return;
       }
@@ -58,6 +58,7 @@ export function usePayCheckout({
             options,
           }) as any;
         },
+        billingDetails,
       );
     },
     [sessionToken, options, processPayment],
