@@ -11,6 +11,26 @@ interface UseStripePaymentOptions {
   onError?: (error: string) => void;
 }
 
+/**
+ * Billing details the host page collected itself, sent with the confirmation
+ * token as `payment_method_data.billing_details`. Only pass fields the
+ * Payment Element is not collecting (its `fields.billingDetails` set to
+ * `'never'`): Stripe rejects a value for a field the element still shows.
+ */
+export interface PaymentBillingDetails {
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: {
+    line1?: string;
+    line2?: string;
+    city?: string;
+    state?: string;
+    postal_code?: string;
+    country?: string;
+  };
+}
+
 interface UseStripePaymentResult {
   state: StripePaymentState;
   processPayment: (
@@ -27,7 +47,8 @@ interface UseStripePaymentResult {
      * The returned response replaces the original `complete` result that gets
      * passed to `onSuccess`.
      */
-    finalizeFn?: () => Promise<Response>
+    finalizeFn?: () => Promise<Response>,
+    billingDetails?: PaymentBillingDetails
   ) => Promise<void>;
   resetError: () => void;
 }
@@ -53,7 +74,8 @@ export function useStripePayment({
       stripe: any,
       elements: any,
       submitFn: (confirmationToken: string, returnUrl: string) => Promise<any>,
-      finalizeFn?: () => Promise<any>
+      finalizeFn?: () => Promise<any>,
+      billingDetails?: PaymentBillingDetails
     ) => {
       if (!stripe || !elements) {
         return;
@@ -79,6 +101,7 @@ export function useStripePayment({
               setup_future_usage: 'off_session',
               payment_method_data: {
                 allow_redisplay: 'always',
+                ...(billingDetails ? { billing_details: billingDetails } : {}),
               },
             },
           });

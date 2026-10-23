@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { usePayCheckout } from '../hooks/usePayCheckout';
+import type { PaymentBillingDetails } from '../hooks/useStripePayment';
 import { PaidBlocksOptions } from '../../utils/apiClient';
 
 interface CheckoutSession {
@@ -46,6 +47,20 @@ export interface CheckoutCompleteResult {
   message?: string;
 }
 
+/**
+ * Where the card form's billing address comes from.
+ *
+ * - `'auto'` (default): the Payment Element shows its own country and postal
+ *   code fields, prefilled from `billingDetails` when given. Without a
+ *   default, Stripe guesses the country from the browser's location.
+ * - `'never'`: the host page collects the billing address itself. The
+ *   Payment Element hides its address fields and the `billingDetails.address`
+ *   current at submit time is sent with the confirmation token instead, so
+ *   the postal code is validated against the country the customer chose,
+ *   not the one they are browsing from.
+ */
+export type CheckoutBillingAddressFields = 'auto' | 'never';
+
 interface CheckoutPaymentFormProps {
   session: CheckoutSession;
   stripePublishableKey: string;
@@ -54,6 +69,9 @@ interface CheckoutPaymentFormProps {
   options?: PaidBlocksOptions;
   onSuccess?: (result?: CheckoutCompleteResult) => void;
   onCancel?: () => void;
+  /** The customer's billing details as the host page knows them. */
+  billingDetails?: PaymentBillingDetails;
+  billingAddressFields?: CheckoutBillingAddressFields;
 }
 
 interface PaymentFormProps {
@@ -61,11 +79,25 @@ interface PaymentFormProps {
   options?: PaidBlocksOptions;
   onSuccess?: (result?: CheckoutCompleteResult) => void;
   onCancel?: () => void;
+  billingDetails?: PaymentBillingDetails;
+  billingAddressFields: CheckoutBillingAddressFields;
 }
 
-const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, onCancel }) => {
+const PaymentForm: React.FC<PaymentFormProps> = ({
+  session,
+  options,
+  onSuccess,
+  onCancel,
+  billingDetails,
+  billingAddressFields,
+}) => {
   const stripe = useStripe();
   const elements = useElements();
+
+  // Read at submit time, so an address the customer finished typing after
+  // the element mounted is the one sent to Stripe.
+  const billingDetailsRef = useRef(billingDetails);
+  billingDetailsRef.current = billingDetails;
 
   if (!session.pricing) {
     return null;
@@ -95,7 +127,20 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
       return;
     }
 
-    await payCheckout(stripe, elements);
+    await payCheckout(
+      stripe,
+      elements,
+      billingAddressFields === 'never' && billingDetailsRef.current?.address
+        ? { address: billingDetailsRef.current.address }
+        : undefined,
+    );
+  };
+
+  const paymentElementOptions = {
+    ...(billingDetails ? { defaultValues: { billingDetails } } : {}),
+    ...(billingAddressFields === 'never'
+      ? { fields: { billingDetails: { address: 'never' as const } } }
+      : {}),
   };
 
   const formatCurrency = (amount: number, currency: string) => {
@@ -138,7 +183,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ session, options, onSuccess, 
       </div>
 
       <div className="paid-invoice-payment-form">
-        <PaymentElement />
+        <PaymentElement options={paymentElementOptions} />
 
         {state.error && (
           <div style={{
@@ -213,6 +258,8 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
   options,
   onSuccess,
   onCancel,
+  billingDetails,
+  billingAddressFields = 'auto',
 }) => {
   const [stripePromise, setStripePromise] = useState<any>(null);
 
@@ -255,6 +302,8 @@ export const CheckoutPaymentForm: React.FC<CheckoutPaymentFormProps> = ({
         options={options}
         onSuccess={onSuccess}
         onCancel={onCancel}
+        billingDetails={billingDetails}
+        billingAddressFields={billingAddressFields}
       />
     </Elements>
   );
